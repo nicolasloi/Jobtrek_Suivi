@@ -2,6 +2,7 @@ global using JobtrekSuivisAPI.Models;
 global using JobtrekSuivisAPI.Data;
 using System.Text.Json.Serialization;
 using JobtrekSuivisAPI.Services.MetierService;
+using JobtrekSuivisAPI.Services.ProjetService;
 using JobtrekSuivisAPI.Services.SuperHeroService;
 using JobtrekSuivisAPI.Services.UserService;
 using Microsoft.Extensions.Options;
@@ -19,6 +20,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ISuperHeroService, SuperHeroService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IProjetService, ProjetService>();
 builder.Services.AddScoped<IMetierService, MetierService>();
 builder.Services.AddDbContext<DataContext>();
 
