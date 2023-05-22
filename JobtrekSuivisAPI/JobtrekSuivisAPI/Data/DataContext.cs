@@ -16,19 +16,20 @@ namespace JobtrekSuivisAPI.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            
+
             DotNetEnv.Env.Load();
 
-            var host = Environment.GetEnvironmentVariable("HOST");
-            var database = Environment.GetEnvironmentVariable("DATABASE");
-            var port = Environment.GetEnvironmentVariable("PORT");
-            var username = Environment.GetEnvironmentVariable("USERNAME");
-            var password = Environment.GetEnvironmentVariable("PASSWORD");
+            var host = Environment.GetEnvironmentVariable("DB_HOST");
+            var database = Environment.GetEnvironmentVariable("DB_DATABASE");
+            var port = Environment.GetEnvironmentVariable("DB_PORT");
+            var username = Environment.GetEnvironmentVariable("DB_USERNAME");
+            var password = Environment.GetEnvironmentVariable("DB_PASSWORD");
 
             var connectionString = $"Host={host};Database={database};Port={port};Username={username};Password={password}";
 
             optionsBuilder.UseNpgsql(connectionString);
         }
+
         
         public DbSet<SuperHero> SuperHeroes { get; set; }
         public DbSet<Role> Roles { get; set; }
