@@ -42,5 +42,6 @@ namespace JobtrekSuivisAPI.Data
         public DbSet<CompetenceProjet> CompetenceProjets { get; set; }
         public DbSet<Evaluation> Evaluations { get; set; }
         public DbSet<Module> Modules { get; set; }
+        public DbSet<ModuleCompetence> ModuleCompetences { get; set; }
     }
 }

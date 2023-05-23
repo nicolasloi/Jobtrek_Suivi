@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JobtrekSuivisAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230512062343_add_table_ModuleCompetence")]
+    [Migration("20230523141532_add_table_ModuleCompetence")]
     partial class add_table_ModuleCompetence
     {
         /// <inheritdoc />
@@ -156,7 +156,8 @@ namespace JobtrekSuivisAPI.Migrations
 
                     b.Property<string>("nom_metier")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(75)
+                        .HasColumnType("character varying(75)");
 
                     b.HasKey("IdMetier");
 
@@ -183,6 +184,29 @@ namespace JobtrekSuivisAPI.Migrations
                     b.ToTable("Modules");
                 });
 
+            modelBuilder.Entity("JobtrekSuivisAPI.Models.ModuleCompetence", b =>
+                {
+                    b.Property<int>("IdModuleCompetence")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdModuleCompetence"));
+
+                    b.Property<int>("CompetenceId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ModuleId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("IdModuleCompetence");
+
+                    b.HasIndex("CompetenceId");
+
+                    b.HasIndex("ModuleId");
+
+                    b.ToTable("ModuleCompetences");
+                });
+
             modelBuilder.Entity("JobtrekSuivisAPI.Models.Projet", b =>
                 {
                     b.Property<int>("IdProjet")
@@ -202,8 +226,9 @@ namespace JobtrekSuivisAPI.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("time_estimed")
-                        .HasColumnType("integer");
+                    b.Property<string>("time_estimed")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("IdProjet");
 
@@ -285,7 +310,8 @@ namespace JobtrekSuivisAPI.Migrations
 
                     b.Property<string>("username")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(24)
+                        .HasColumnType("character varying(24)");
 
                     b.Property<int>("year")
                         .HasColumnType("integer");
@@ -409,6 +435,25 @@ namespace JobtrekSuivisAPI.Migrations
                     b.Navigation("User");
 
                     b.Navigation("UserProjet");
+                });
+
+            modelBuilder.Entity("JobtrekSuivisAPI.Models.ModuleCompetence", b =>
+                {
+                    b.HasOne("JobtrekSuivisAPI.Models.Competence", "Competence")
+                        .WithMany()
+                        .HasForeignKey("CompetenceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JobtrekSuivisAPI.Models.Module", "Module")
+                        .WithMany()
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Competence");
+
+                    b.Navigation("Module");
                 });
 
             modelBuilder.Entity("JobtrekSuivisAPI.Models.Projet", b =>
