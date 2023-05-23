@@ -1,10 +1,12 @@
 global using JobtrekSuivisAPI.Models;
 global using JobtrekSuivisAPI.Data;
 using System.Text.Json.Serialization;
+using JobtrekSuivisAPI.Services.CompetenceService;
 using JobtrekSuivisAPI.Services.DomaineService;
 using JobtrekSuivisAPI.Services.MetierService;
 using JobtrekSuivisAPI.Services.ProjetService;
 using JobtrekSuivisAPI.Services.SuperHeroService;
+using JobtrekSuivisAPI.Services.UserProjetService;
 using JobtrekSuivisAPI.Services.UserService;
 using Microsoft.Extensions.Options;
 
@@ -24,6 +26,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProjetService, ProjetService>();
 builder.Services.AddScoped<IMetierService, MetierService>();
 builder.Services.AddScoped<IDomaineService, DomaineService>();
+builder.Services.AddScoped<ICompetenceService, CompetenceService>();
+builder.Services.AddScoped<IUserProjetService, UserProjetService>();
 builder.Services.AddDbContext<DataContext>();
 
 var provider = builder.Services.BuildServiceProvider();
