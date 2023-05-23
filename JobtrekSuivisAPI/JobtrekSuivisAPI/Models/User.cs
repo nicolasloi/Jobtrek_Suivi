@@ -26,16 +26,10 @@ namespace JobtrekSuivisAPI.Models
         [Range(1, 4, ErrorMessage = "L'année doit être comprise entre 1 et 4.")]
         public int year { get; set; }
         
-        [JsonIgnore]
         public int MetierId { get; set; }
-        
-        [JsonIgnore]
         public Metier Metier { get; set; } = null!;
-
-        [JsonIgnore]
-        public int RoleId { get; set; }
         
-        [JsonIgnore]
+        public int RoleId { get; set; }
         public Role Role { get; set; } = null!;
     }
 }

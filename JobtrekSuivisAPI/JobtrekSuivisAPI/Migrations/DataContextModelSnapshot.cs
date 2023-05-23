@@ -181,6 +181,29 @@ namespace JobtrekSuivisAPI.Migrations
                     b.ToTable("Modules");
                 });
 
+            modelBuilder.Entity("JobtrekSuivisAPI.Models.ModuleCompetence", b =>
+                {
+                    b.Property<int>("IdModuleCompetence")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdModuleCompetence"));
+
+                    b.Property<int>("CompetenceId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ModuleId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("IdModuleCompetence");
+
+                    b.HasIndex("CompetenceId");
+
+                    b.HasIndex("ModuleId");
+
+                    b.ToTable("ModuleCompetences");
+                });
+
             modelBuilder.Entity("JobtrekSuivisAPI.Models.Projet", b =>
                 {
                     b.Property<int>("IdProjet")
@@ -409,6 +432,25 @@ namespace JobtrekSuivisAPI.Migrations
                     b.Navigation("User");
 
                     b.Navigation("UserProjet");
+                });
+
+            modelBuilder.Entity("JobtrekSuivisAPI.Models.ModuleCompetence", b =>
+                {
+                    b.HasOne("JobtrekSuivisAPI.Models.Competence", "Competence")
+                        .WithMany()
+                        .HasForeignKey("CompetenceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JobtrekSuivisAPI.Models.Module", "Module")
+                        .WithMany()
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Competence");
+
+                    b.Navigation("Module");
                 });
 
             modelBuilder.Entity("JobtrekSuivisAPI.Models.Projet", b =>
