@@ -10,11 +10,8 @@ public class Competence
 
     public string nom_competence { get; set; }
     public string desc_competence { get; set; }
-    
     public int DomaineId { get; set; }
-    
-    [JsonIgnore]
     public Domaine Domaine { get; set; } = null!;
     
-    public List<Module> Modules { get; set; }
+    public List<ModuleCompetence> ModuleCompetences { get; set; } = new List<ModuleCompetence>();
 }

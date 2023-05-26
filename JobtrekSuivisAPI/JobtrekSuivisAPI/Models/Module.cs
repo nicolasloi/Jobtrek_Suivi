@@ -10,5 +10,5 @@ public class Module
     public string nom_module { get; set; }
     public bool lieu_module { get; set; }
     
-    public List<Competence> Competences { get; set; }
+    public List<ModuleCompetence> ModuleCompetences { get; set; } = new List<ModuleCompetence>();
 }

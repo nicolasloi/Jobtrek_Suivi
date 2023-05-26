@@ -3,6 +3,7 @@ using System;
 using JobtrekSuivisAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JobtrekSuivisAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230523145002_edit_ModuleAndCompetence")]
+    partial class edit_ModuleAndCompetence
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -407,13 +410,13 @@ namespace JobtrekSuivisAPI.Migrations
             modelBuilder.Entity("JobtrekSuivisAPI.Models.ModuleCompetence", b =>
                 {
                     b.HasOne("JobtrekSuivisAPI.Models.Competence", "Competence")
-                        .WithMany("ModuleCompetences")
+                        .WithMany()
                         .HasForeignKey("CompetenceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("JobtrekSuivisAPI.Models.Module", "Module")
-                        .WithMany("ModuleCompetences")
+                        .WithMany()
                         .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -472,11 +475,6 @@ namespace JobtrekSuivisAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("JobtrekSuivisAPI.Models.Competence", b =>
-                {
-                    b.Navigation("ModuleCompetences");
-                });
-
             modelBuilder.Entity("JobtrekSuivisAPI.Models.Domaine", b =>
                 {
                     b.Navigation("Competences");
@@ -489,11 +487,6 @@ namespace JobtrekSuivisAPI.Migrations
                     b.Navigation("Projets");
 
                     b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("JobtrekSuivisAPI.Models.Module", b =>
-                {
-                    b.Navigation("ModuleCompetences");
                 });
 
             modelBuilder.Entity("JobtrekSuivisAPI.Models.Role", b =>
