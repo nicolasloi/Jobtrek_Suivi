@@ -8,7 +8,7 @@ namespace JobtrekSuivisAPI.Models
         [Key]
         public int IdUserProjet { get; set; }
         
-        public DateTime DateCommencement { get; set; }
+        public DateTime DateCommencement { get; set; } 
         public DateTime? DateRendu { get; set; }
         
         public int UserId { get; set; }
