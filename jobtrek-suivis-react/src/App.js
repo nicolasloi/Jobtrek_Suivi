@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom"
 import Topbar from "./pages/global/Topbar";
 import Dashboard from "./pages/dashboard";
 import Sidebar from "./pages/global/Sidebar";
+import User from "./pages/user";
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
                     <Topbar />
                     <Routes>
                         <Route path="/" element={<Dashboard/>} />
+                        <Route path="/user" element={<User/>} />
                     </Routes>
                 </main>
             </div>
