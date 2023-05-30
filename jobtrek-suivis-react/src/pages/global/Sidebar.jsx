@@ -15,12 +15,10 @@ import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
 import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import logo from "../../img/logo.svg";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
-    const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
+    const colors = tokens("dark");
     return (
         <MenuItem
             active={selected === title}
@@ -37,8 +35,7 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
 };
 
 const Sidebar = () => {
-    const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
+    const colors = tokens("dark");
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [selected, setSelected] = useState("Dashboard");
 
@@ -55,10 +52,10 @@ const Sidebar = () => {
                     padding: "5px 35px 5px 20px !important",
                 },
                 "& .pro-inner-item:hover": {
-                    color: "#868dfb !important",
+                    color: "#B5F840 !important",
                 },
                 "& .pro-menu-item.active": {
-                    color: "#6870fa !important",
+                    color: "#8FC62E !important",
                 },
             }}
         >
@@ -70,7 +67,7 @@ const Sidebar = () => {
                         icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
                         style={{
                             margin: "10px 0 20px 0",
-                            color: colors.grey[100],
+                            color: colors.grey[100]
                         }}
                     >
                         {!isCollapsed && (
@@ -82,7 +79,7 @@ const Sidebar = () => {
                             >
                                 <img src={logo} alt="logo" style={{ width: "65%", height: "auto" }} />
 
-                                <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
+                                <IconButton onClick={() => setIsCollapsed(!isCollapsed)} sx={{ color: colors.grey[100] }}>
                                     <MenuOutlinedIcon />
                                 </IconButton>
                             </Box>
@@ -188,13 +185,6 @@ const Sidebar = () => {
                             title="Line Chart"
                             to="/line"
                             icon={<TimelineOutlinedIcon />}
-                            selected={selected}
-                            setSelected={setSelected}
-                        />
-                        <Item
-                            title="Geography Chart"
-                            to="/geography"
-                            icon={<MapOutlinedIcon />}
                             selected={selected}
                             setSelected={setSelected}
                         />
