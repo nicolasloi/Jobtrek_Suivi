@@ -3,7 +3,6 @@ import Header from "../../components/Header";
 import { Box, Typography, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
-import { mockDataTeam } from "../../data/mockData";
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 
 const User = () => {
@@ -27,15 +26,15 @@ const User = () => {
     }, []);
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 70 },
+        { field: 'id', headerName: 'ID', width: 60 },
         {   field: 'metier',
             headerName: 'Métier',
-            width: 200,
+            flex: 1,
             valueGetter: (params) => params.row.metier.nom_metier,
         },
-        { field: 'username', headerName: 'Name', width: 200 },
-        { field: 'email', headerName: 'Email', width: 200 },
-        { field: 'year', headerName: 'Année', width: 100 },
+        { field: 'username', headerName: 'Name', flex: 1 },
+        { field: 'email', headerName: 'Email', flex: 1 },
+        { field: 'year', headerName: 'Année', type: "number" },
     ];
 
     return (

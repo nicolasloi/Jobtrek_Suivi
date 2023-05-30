@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using JobtrekSuivisAPI.Services.UserService;
+using JobtrekSuivisAPI.Utilities;
 
 namespace JobtrekSuivisAPI.Controllers
 {
@@ -40,6 +41,24 @@ namespace JobtrekSuivisAPI.Controllers
         {
             var result = await _userService.AddUser(user);
             return Ok(result);
+        }
+        
+        [HttpPost("login")]
+        public async Task<ActionResult<User>> Login([FromBody] LoginRequest loginRequest)
+        {
+            var user = await _userService.GetUserByEmail(loginRequest.Email);
+            if (user == null)
+                return BadRequest("Invalid email or password");
+
+            var isPasswordValid = Security.VerifyPassword(loginRequest.Password, user.password);
+            if (!isPasswordValid)
+                return BadRequest("Invalid email or password");
+
+            // Générez le token JWT
+            var token = TokenService.GenerateToken(user);
+
+            // Retournez le token JWT dans la réponse
+            return Ok(new { token });
         }
 
         [HttpPut("{id}")]

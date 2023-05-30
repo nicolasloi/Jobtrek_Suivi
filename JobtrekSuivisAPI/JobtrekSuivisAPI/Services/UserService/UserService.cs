@@ -48,12 +48,7 @@ public class UserService : IUserService
         {
             throw new Exception("Le rôle spécifié est invalide.");
         }
-        
-        if (role.IdRole != 1)
-        {
-            throw new Exception("Seuls les utilisateurs avec le rôle de Formateur peuvent ajouter des utilisateurs.");
-        }
-        
+
         user.password = BCrypt.Net.BCrypt.HashPassword(user.password);
         
         user.Metier = metier;
@@ -121,4 +116,12 @@ public class UserService : IUserService
         
         return await _context.Users.ToListAsync();
     }
+    
+    public async Task<User> GetUserByEmail(string email)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.email == email);
+        return user;
+    }
+
+
 }

@@ -11,4 +11,6 @@ public interface IUserService
     Task<List<User>?> UpdateUser(int id, User request);
     
     Task<List<User>?> DeleteUser(int id);
+    
+    Task<User> GetUserByEmail(string email);
 }
