@@ -9,8 +9,10 @@ public static class TokenService
 {
     public static string GenerateToken(User user)
     {
+        var privateKey = Environment.GetEnvironmentVariable("KEY_TOKEN");
+        
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes("your_secret_key_here"); // Clé secrète pour signer le token
+        var key = Encoding.ASCII.GetBytes(privateKey); // Clé secrète pour signer le token
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new Claim[]

@@ -187,6 +187,7 @@ const Sidebar = () => {
                             icon={<TimelineOutlinedIcon />}
                             selected={selected}
                             setSelected={setSelected}
+                            margin-bottom="50px"
                         />
                     </Box>
                 </Menu>
