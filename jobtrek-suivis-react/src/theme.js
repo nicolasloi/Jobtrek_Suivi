@@ -28,15 +28,15 @@ export const tokens = (mode) => ({
                 900: "#040509",
             },
             greenAccent: {
-                100: "#dbf5ee",
-                200: "#b7ebde",
-                300: "#94e2cd",
-                400: "#70d8bd",
-                500: "#4cceac",
-                600: "#3da58a",
-                700: "#2e7c67",
-                800: "#1e5245",
-                900: "#0f2922",
+                100: "#f3f9ea",
+                200: "#daebba",
+                300: "#c2df8d",
+                400: "#9acb42",
+                500: "#8fc62e",
+                600: "#8ab63b",
+                700: "#7ca335",
+                800: "#567225",
+                900: "#334416",
             },
             redAccent: {
                 100: "#f8dcdb",
@@ -59,6 +59,9 @@ export const tokens = (mode) => ({
                 700: "#3e4396",
                 800: "#2a2d64",
                 900: "#151632",
+            },
+            tableAccent: {
+                500: "#6e7a84",
             },
         }
         : {
@@ -85,15 +88,15 @@ export const tokens = (mode) => ({
                 900: "#d0d1d5",
             },
             greenAccent: {
-                100: "#0f2922",
-                200: "#1e5245",
-                300: "#2e7c67",
-                400: "#3da58a",
-                500: "#4cceac",
-                600: "#70d8bd",
-                700: "#94e2cd",
-                800: "#b7ebde",
-                900: "#dbf5ee",
+                100: "#334416",
+                200: "#567225",
+                300: "#7ca335",
+                400: "#8ab63b",
+                500: "#8fc62e",
+                600: "#9acb42",
+                700: "#c2df8d",
+                800: "#daebba",
+                900: "#f3f9ea",
             },
             redAccent: {
                 100: "#2c100f",
@@ -116,6 +119,9 @@ export const tokens = (mode) => ({
                 700: "#a4a9fc",
                 800: "#c3c6fd",
                 900: "#e1e2fe",
+            },
+            tableAccent: {
+                500: "#F1F5F9",
             },
         }),
 });
@@ -199,12 +205,12 @@ export const ColorModeContext = createContext({
 });
 
 export const useMode = () => {
-    const [mode, setMode] = useState("dark");
+    const [mode, setMode] = useState("light");
 
     const colorMode = useMemo(
         () => ({
             toggleColorMode: () =>
-                setMode((prev) => (prev === "light" ? "dark" : "light")),
+                setMode((prev) => (prev === "light" ? "dark" /* if you want darkmode just left light to dark */ : "light")),
         }),
         []
     );
