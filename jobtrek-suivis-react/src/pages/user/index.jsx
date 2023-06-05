@@ -47,7 +47,7 @@ const User = () => {
                     <CustomButton nom="CREATE USER"/>
                 </Link>
             </Box>
-            <Box m="50 0 0 0" height="70vh" sx={{
+            <Box m="50 0 0 0" height="auto" sx={{
                 display: "flex",
                 flexDirection: "column",
                 "& .MuiDataGrid-root": {
@@ -72,6 +72,7 @@ const User = () => {
                     rows={userData}
                     columns={columns}
                 />
+
             </Box>
 
         </Box>

@@ -61,7 +61,7 @@ export const tokens = (mode) => ({
                 900: "#151632",
             },
             tableAccent: {
-                500: "#6e7a84",
+                500: "#555f65",
             },
         }
         : {
