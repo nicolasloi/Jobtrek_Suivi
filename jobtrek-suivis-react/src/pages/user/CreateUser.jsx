@@ -1,10 +1,10 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, MenuItem, Select, TextField } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import Header from "../../components/Header";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import CustomButton from "../../components/button";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 const currentDate = new Date();
@@ -14,6 +14,25 @@ const CreateUser = () => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
     const params = useParams();
     const navigate = useNavigate();
+    const [metiers, setMetiers] = useState([]);
+
+    useEffect(() => {
+        const fetchMetiers = async () => {
+            try {
+                const response = await fetch(process.env.REACT_APP_API_URL_METIERS);
+                if (response.ok) {
+                    const data = await response.json();
+                    setMetiers(data);
+                } else {
+                    console.error("Une erreur s'est produite lors de la récupération des métiers.");
+                }
+            } catch (error) {
+                console.error("Une erreur s'est produite lors de la récupération des métiers:", error);
+            }
+        };
+
+        fetchMetiers();
+    }, []);
 
     const handleFormSubmit = async (values, { setErrors }) => {
         try {
@@ -26,16 +45,53 @@ const CreateUser = () => {
             });
 
             if (response.ok) {
-                // Rediriger vers la page utilisateur après la création réussie de l'utilisateur
                 navigate("/user");
             } else {
-                // Gérer les erreurs de requête si nécessaire
                 console.error("Une erreur s'est produite lors de la création de l'utilisateur.");
             }
         } catch (error) {
             console.error("Une erreur s'est produite lors de la création de l'utilisateur:", error);
             setErrors({ backend: error.message });
         }
+    };
+
+    const checkoutSchema = yup.object().shape({
+        email: yup
+            .string()
+            .email("Invalid email")
+            .required("L'email est obligatoire.")
+            .matches(/^[A-Za-z0-9._%+-]+@jobtrek\.ch$/, "L'email doit se terminer par @jobtrek.ch."),
+        password: yup
+            .string()
+            .required("Le mot de passe est obligatoire.")
+            .min(8, "Le mot de passe doit contenir au moins 8 caractères."),
+        username: yup
+            .string()
+            .required("Le nom d'utilisateur est obligatoire.")
+            .max(30, "Le nom d'utilisateur ne peut pas dépasser 30 caractères."),
+        year: yup
+            .number()
+            .required("L'année est obligatoire.")
+            .min(1, "L'année doit être supérieure ou égale à 1.")
+            .max(4, "L'année doit être inférieure ou égale à 4."),
+        metierId: yup.number().required("L'ID du métier est obligatoire."),
+        roleId: yup.number().required("L'ID du rôle est obligatoire."),
+    });
+
+    const initialValues = {
+        email: "",
+        password: "",
+        username: "",
+        createdAt: currentCreatedAt,
+        year: null,
+        metierId: null,
+        metier: {
+            nom_metier: "string",
+        },
+        roleId: null,
+        role: {
+            nom_role: "string",
+        },
     };
 
     return (
@@ -120,10 +176,9 @@ const CreateUser = () => {
                                 helperText={touched.year && errors.year}
                                 sx={{ gridColumn: "span 4" }}
                             />
-                            <TextField
+                            <Select
                                 fullWidth
                                 variant="filled"
-                                type="number"
                                 label="Metier ID"
                                 onBlur={handleBlur}
                                 onChange={handleChange}
@@ -132,7 +187,13 @@ const CreateUser = () => {
                                 error={!!touched.metierId && !!errors.metierId}
                                 helperText={touched.metierId && errors.metierId}
                                 sx={{ gridColumn: "span 4" }}
-                            />
+                            >
+                                {metiers.map((metier) => (
+                                    <MenuItem key={metier.idMetier} value={metier.idMetier}>
+                                        {metier.nom_metier}
+                                    </MenuItem>
+                                ))}
+                            </Select>
                             <TextField
                                 fullWidth
                                 variant="filled"
@@ -176,46 +237,6 @@ const CreateUser = () => {
             </Formik>
         </Box>
     );
-};
-
-
-const checkoutSchema = yup.object().shape({
-    email: yup
-        .string()
-        .email("Invalid email")
-        .required("L'email est obligatoire.")
-        .matches(/^[A-Za-z0-9._%+-]+@jobtrek\.ch$/, "L'email doit se terminer par @jobtrek.ch."),
-    password: yup
-        .string()
-        .required("Le mot de passe est obligatoire.")
-        .min(8, "Le mot de passe doit contenir au moins 8 caractères."),
-    username: yup
-        .string()
-        .required("Le nom d'utilisateur est obligatoire.")
-        .max(30, "Le nom d'utilisateur ne peut pas dépasser 30 caractères."),
-    year: yup
-        .number()
-        .required("L'année est obligatoire.")
-        .min(1, "L'année doit être supérieure ou égale à 1.")
-        .max(4, "L'année doit être inférieure ou égale à 4."),
-    metierId: yup.number().required("L'ID du métier est obligatoire."),
-    roleId: yup.number().required("L'ID du rôle est obligatoire."),
-});
-
-const initialValues = {
-    email: "",
-    password: "",
-    username: "",
-    createdAt: currentCreatedAt,
-    year: null,
-    metierId: null,
-    metier: {
-        nom_metier: "string",
-    },
-    roleId: null,
-    role: {
-        nom_role: "string",
-    },
 };
 
 export default CreateUser;
