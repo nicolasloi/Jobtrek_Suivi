@@ -15,6 +15,7 @@ const CreateUser = () => {
     const params = useParams();
     const navigate = useNavigate();
     const [metiers, setMetiers] = useState([]);
+    const [roles, setRoles] = useState([]);
 
     useEffect(() => {
         const fetchMetiers = async () => {
@@ -33,19 +34,20 @@ const CreateUser = () => {
 
         const fetchRoles = async () => {
             try {
-                const response = await fetch(process.env.REACT_APP_API_URL_METIERS);
+                const response = await fetch(process.env.REACT_APP_API_URL_ROLES);
                 if (response.ok) {
                     const data = await response.json();
-                    setMetiers(data);
+                    setRoles(data);
                 } else {
-                    console.error("Une erreur s'est produite lors de la récupération des métiers.");
+                    console.error("Une erreur s'est produite lors de la récupération des roles.");
                 }
             } catch (error) {
-                console.error("Une erreur s'est produite lors de la récupération des métiers:", error);
+                console.error("Une erreur s'est produite lors de la récupération des roles:", error);
             }
         };
 
         fetchMetiers();
+        fetchRoles();
     }, []);
 
     const handleFormSubmit = async (values, {setErrors}) => {
@@ -220,9 +222,9 @@ const CreateUser = () => {
                                 helperText={touched.roleId && errors.roleId}
                                 sx={{gridColumn: "span 4"}}
                             >
-                                {metiers.map((metier) => (
-                                    <MenuItem key={metier.idMetier} value={metier.idMetier}>
-                                        {metier.nom_metier}
+                                {roles.map((role) => (
+                                    <MenuItem key={role.idRole} value={role.idRole}>
+                                        {role.nom_role}
                                     </MenuItem>
                                 ))}
                             </Select>
