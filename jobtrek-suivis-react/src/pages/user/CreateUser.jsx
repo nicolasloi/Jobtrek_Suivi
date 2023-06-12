@@ -1,10 +1,10 @@
-import { Box, Button, MenuItem, Select, TextField } from "@mui/material";
-import { Formik } from "formik";
+import {Box, Button, MenuItem, Select, TextField} from "@mui/material";
+import {Formik} from "formik";
 import * as yup from "yup";
 import Header from "../../components/Header";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import CustomButton from "../../components/button";
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 const currentDate = new Date();
@@ -31,10 +31,24 @@ const CreateUser = () => {
             }
         };
 
+        const fetchRoles = async () => {
+            try {
+                const response = await fetch(process.env.REACT_APP_API_URL_METIERS);
+                if (response.ok) {
+                    const data = await response.json();
+                    setMetiers(data);
+                } else {
+                    console.error("Une erreur s'est produite lors de la récupération des métiers.");
+                }
+            } catch (error) {
+                console.error("Une erreur s'est produite lors de la récupération des métiers:", error);
+            }
+        };
+
         fetchMetiers();
     }, []);
 
-    const handleFormSubmit = async (values, { setErrors }) => {
+    const handleFormSubmit = async (values, {setErrors}) => {
         try {
             const response = await fetch(process.env.REACT_APP_API_URL_USER, {
                 method: "POST",
@@ -51,7 +65,7 @@ const CreateUser = () => {
             }
         } catch (error) {
             console.error("Une erreur s'est produite lors de la création de l'utilisateur:", error);
-            setErrors({ backend: error.message });
+            setErrors({backend: error.message});
         }
     };
 
@@ -96,7 +110,7 @@ const CreateUser = () => {
 
     return (
         <Box m="20px">
-            <Header title="CREATE USER" subtitle="Create a New User Profile" />
+            <Header title="CREATE USER" subtitle="Créer un nouveau profil d'utilisateur"/>
 
             <Formik
                 onSubmit={handleFormSubmit}
@@ -118,7 +132,7 @@ const CreateUser = () => {
                             gap="30px"
                             gridTemplateColumns="repeat(4, minmax(0, 1fr))"
                             sx={{
-                                "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+                                "& > div": {gridColumn: isNonMobile ? undefined : "span 4"},
                             }}
                         >
                             <TextField
@@ -135,7 +149,7 @@ const CreateUser = () => {
                                     (touched.email && errors.email) ||
                                     (errors.backend && touched.email && errors.backend)
                                 }
-                                sx={{ gridColumn: "span 4" }}
+                                sx={{gridColumn: "span 4"}}
                             />
                             <TextField
                                 fullWidth
@@ -148,7 +162,7 @@ const CreateUser = () => {
                                 name="password"
                                 error={!!touched.password && !!errors.password}
                                 helperText={touched.password && errors.password}
-                                sx={{ gridColumn: "span 4" }}
+                                sx={{gridColumn: "span 4"}}
                             />
                             <TextField
                                 fullWidth
@@ -161,7 +175,7 @@ const CreateUser = () => {
                                 name="username"
                                 error={!!touched.username && !!errors.username}
                                 helperText={touched.username && errors.username}
-                                sx={{ gridColumn: "span 4" }}
+                                sx={{gridColumn: "span 4"}}
                             />
                             <TextField
                                 fullWidth
@@ -174,7 +188,7 @@ const CreateUser = () => {
                                 name="year"
                                 error={!!touched.year && !!errors.year}
                                 helperText={touched.year && errors.year}
-                                sx={{ gridColumn: "span 4" }}
+                                sx={{gridColumn: "span 4"}}
                             />
                             <Select
                                 fullWidth
@@ -186,7 +200,7 @@ const CreateUser = () => {
                                 name="metierId"
                                 error={!!touched.metierId && !!errors.metierId}
                                 helperText={touched.metierId && errors.metierId}
-                                sx={{ gridColumn: "span 4" }}
+                                sx={{gridColumn: "span 4"}}
                             >
                                 {metiers.map((metier) => (
                                     <MenuItem key={metier.idMetier} value={metier.idMetier}>
@@ -194,10 +208,9 @@ const CreateUser = () => {
                                     </MenuItem>
                                 ))}
                             </Select>
-                            <TextField
+                            <Select
                                 fullWidth
                                 variant="filled"
-                                type="number"
                                 label="Role ID"
                                 onBlur={handleBlur}
                                 onChange={handleChange}
@@ -205,12 +218,18 @@ const CreateUser = () => {
                                 name="roleId"
                                 error={!!touched.roleId && !!errors.roleId}
                                 helperText={touched.roleId && errors.roleId}
-                                sx={{ gridColumn: "span 4" }}
-                            />
+                                sx={{gridColumn: "span 4"}}
+                            >
+                                {metiers.map((metier) => (
+                                    <MenuItem key={metier.idMetier} value={metier.idMetier}>
+                                        {metier.nom_metier}
+                                    </MenuItem>
+                                ))}
+                            </Select>
                         </Box>
                         <Box display="flex" justifyContent="space-between" mt="20px">
-                            <Link to="/user" style={{ textDecoration: "none" }}>
-                                <CustomButton nom="Retour" />
+                            <Link to="/user" style={{textDecoration: "none"}}>
+                                <CustomButton nom="Retour"/>
                             </Link>
 
                             <Button
@@ -227,16 +246,12 @@ const CreateUser = () => {
                                 Create New User
                             </Button>
                         </Box>
-                        {errors.backend && (
-                            <Box mt="20px" color="red">
-                                {errors.backend}
-                            </Box>
-                        )}
                     </form>
                 )}
             </Formik>
         </Box>
-    );
+    )
+        ;
 };
 
 export default CreateUser;

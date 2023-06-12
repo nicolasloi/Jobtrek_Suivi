@@ -5,6 +5,7 @@ using JobtrekSuivisAPI.Services.CompetenceService;
 using JobtrekSuivisAPI.Services.DomaineService;
 using JobtrekSuivisAPI.Services.MetierService;
 using JobtrekSuivisAPI.Services.ProjetService;
+using JobtrekSuivisAPI.Services.RoleService;
 using JobtrekSuivisAPI.Services.SuperHeroService;
 using JobtrekSuivisAPI.Services.UserProjetService;
 using JobtrekSuivisAPI.Services.UserService;
@@ -28,6 +29,7 @@ builder.Services.AddScoped<IMetierService, MetierService>();
 builder.Services.AddScoped<IDomaineService, DomaineService>();
 builder.Services.AddScoped<ICompetenceService, CompetenceService>();
 builder.Services.AddScoped<IUserProjetService, UserProjetService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddDbContext<DataContext>();
 
 var provider = builder.Services.BuildServiceProvider();
