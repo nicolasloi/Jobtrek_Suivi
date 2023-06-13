@@ -22,7 +22,6 @@ function App() {
                                 children,
                             }) => {
         const token = localStorage.getItem("token");
-        console.log(token);
         if (!token) {
             return <Navigate to={redirectPath} replace />;
         }
@@ -30,17 +29,8 @@ function App() {
         return children;
     };
 
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            setUser({ id: '1', name: 'robin' });
-            setAuthToken(token);
-        }
-    }, []);
-
     const handleLogout = () => {
-        localStorage.removeItem("token");
-        setAuthToken(null);
+        localStorage.removeItem('token');
         setUser(null);
     };
 
@@ -51,17 +41,17 @@ function App() {
                 <div className="app">
                     {shouldShowTopbarAndSidebar && <Sidebar />}
                     <main className="content">
-                        {shouldShowTopbarAndSidebar && <Topbar />}
+                        {shouldShowTopbarAndSidebar && <Topbar onLogout={handleLogout} />}
                         <Routes>
                             <Route path="/user" element={<User />} />
                             <Route path="/user/create" element={<CreateUser />} />
-                            <Route path="/login" element={<Login />} />
+                            <Route path="/login" element={<Login setUser={setUser} />} />
 
                             <Route
                                 path="/"
                                 element={
-                                    <ProtectedRoute user={user}>
-                                        <Dashboard user={user}/>
+                                    <ProtectedRoute>
+                                        <Dashboard user={user} />
                                     </ProtectedRoute>
                                 }
                             />
@@ -73,5 +63,6 @@ function App() {
         </ColorModeContext.Provider>
     );
 }
+
 
 export default App;

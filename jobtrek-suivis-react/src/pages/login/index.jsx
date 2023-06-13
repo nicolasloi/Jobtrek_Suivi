@@ -5,7 +5,7 @@ import Header from "../../components/Header";
 import React, {useContext, useState} from "react";
 import { useNavigate } from "react-router-dom";
 
-function Login() {
+function Login({ setUser }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
@@ -21,10 +21,12 @@ function Login() {
         axios
             .post(process.env.REACT_APP_API_URL_USER_LOGIN, loginPayload)
             .then((response) => {
-                const token = response.data.token;
+                const { token, user } = response.data;
 
                 localStorage.setItem("token", token);
                 setAuthToken(token);
+
+                setUser(user);
 
                 navigate('/');
             })

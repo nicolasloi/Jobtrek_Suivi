@@ -58,7 +58,7 @@ namespace JobtrekSuivisAPI.Controllers
             var token = TokenService.GenerateToken(user);
 
             // Retournez le token JWT dans la réponse
-            return Ok(new { token });
+            return Ok(new { token, user });
         }
 
         [HttpPut("{id}")]
