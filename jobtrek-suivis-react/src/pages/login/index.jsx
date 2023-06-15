@@ -1,12 +1,14 @@
-import { setAuthToken } from "../../components/setAuthToken";
-import axios from "axios";
-import {Box, Button, TextField, Typography} from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../../img/logo.svg";
+import axios from "axios";
+import { setAuthToken } from "../../components/setAuthToken";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
+import { useTheme, ThemeProvider } from "@mui/material/styles";
+import logo from "../../img/logo.svg";
 
 function Login({ setUser }) {
+    const theme = useTheme();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [emailError, setEmailError] = useState("");
@@ -72,84 +74,91 @@ function Login({ setUser }) {
     };
 
     return (
-        <div>
-            <Grid container sx={{ height: "100vh" }}>
-                {/* Colonne de gauche */}
-                <Grid item xs={12} md={6} sx={{ backgroundColor: "#FFFFFF" }}>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            height: "100%",
-                            padding: "2rem",
-                            maxWidth: "400px",
-                            margin: "0 auto",
-                        }}
-                    >
-                        <form onSubmit={handleSubmit} style={{ width: "100%" }}>
-                            <Typography variant="h3" sx={{ marginBottom: "2rem" }}>
-                                Connectez-vous à votre compte
-                            </Typography>
+        <ThemeProvider theme={theme}>
+            <div>
+                <Grid container sx={{ height: "100vh" }}>
+                    {/* Colonne de gauche */}
+                    <Grid item xs={12} md={6} sx={{ backgroundColor: theme.palette.background.default }}>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                height: "100%",
+                                padding: "2rem",
+                                maxWidth: "400px",
+                                margin: "0 auto",
+                            }}
+                        >
+                            <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+                                <Typography variant="h3" sx={{ marginBottom: "2rem", color: theme.palette.primary.main }}>
+                                    Connectez-vous à votre compte
+                                </Typography>
 
-                            <TextField
-                                type="email"
-                                label="Email"
-                                value={email}
-                                onChange={handleEmailChange}
-                                required
-                                error={!!emailError}
-                                helperText={emailError}
-                                fullWidth
-                                style={{ marginBottom: "1.5rem" }}
-                            />
-                            <TextField
-                                fullWidth
-                                variant="outlined"
-                                type="password"
-                                label="Password"
-                                value={password}
-                                onChange={handlePasswordChange}
-                                required
-                                error={!!passwordError}
-                                helperText={passwordError}
-                                style={{ marginBottom: "1.5rem" }}
-                                sx={{ backgroundColor: "#FFFFFF" }}
-                            />
-                            {loginError && <p style={{ color: "red" }}>{loginError}</p>}
-                            <Button
-                                type="submit"
-                                color="secondary"
-                                variant="contained"
-                                sx={{
-                                    fontWeight: 800,
-                                    fontSize: "15px",
-                                    lineHeight: "22px",
-                                    color: "#FFFFFF",
-                                    padding: "8px 22px",
-                                }}
-                            >
-                                Login
-                            </Button>
-                        </form>
-                    </Box>
-                </Grid>
+                                <TextField
+                                    type="email"
+                                    label="Email"
+                                    value={email}
+                                    onChange={handleEmailChange}
+                                    required
+                                    error={!!emailError}
+                                    helperText={emailError}
+                                    fullWidth
+                                    style={{ marginBottom: "1.5rem" }}
+                                />
+                                <TextField
+                                    fullWidth
+                                    variant="outlined"
+                                    type="password"
+                                    label="Password"
+                                    value={password}
+                                    onChange={handlePasswordChange}
+                                    required
+                                    error={!!passwordError}
+                                    helperText={passwordError}
+                                    style={{ marginBottom: "1.5rem" }}
+                                    sx={{ backgroundColor: theme.palette.background.default }}
+                                />
+                                {loginError && (
+                                    <Typography variant="body1" sx={{ color: theme.palette.error.main, marginBottom: "1.5rem" }}>
+                                        {loginError}
+                                    </Typography>
+                                )}
+                                <Button
+                                    type="submit"
+                                    color="secondary"
+                                    variant="contained"
+                                    sx={{
+                                        fontWeight: 800,
+                                        fontSize: "15px",
+                                        lineHeight: "22px",
+                                        padding: "8px 22px",
+                                        color: "#ffffff",
+                                        backgroundColor: theme.palette.secondary.main,
+                                    }}
+                                >
+                                    Login
+                                </Button>
+                            </form>
+                        </Box>
+                    </Grid>
 
-                {/* Colonne de droite */}
-                <Grid item xs={12} md={6} sx={{ backgroundColor: "#1C2536" }}>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            height: "100%",
-                        }}
-                    >
-                        <img src={logo} alt="Logo" style={{ width: "35%" }} />
-                    </Box>
+                    {/* Colonne de droite */}
+                    <Grid item xs={12} md={6} sx={{ backgroundColor: "#1C2536" }}>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                height: "100%",
+                            }}
+                        >
+                            <img src={logo} alt="Logo" style={{ width: "35%" }} />
+                        </Box>
+                    </Grid>
                 </Grid>
-            </Grid>
-        </div>
+            </div>
+        </ThemeProvider>
     );
 }
 

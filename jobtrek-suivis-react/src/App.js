@@ -8,6 +8,7 @@ import Sidebar from './pages/global/Sidebar';
 import User from './pages/user';
 import CreateUser from "./pages/user/CreateUser";
 import Login from "./pages/login";
+import UserEdit from "./pages/user/UserEdit";
 
 
 function App() {
@@ -58,8 +59,7 @@ function App() {
                                 element={
                                     <ProtectedRoute>
                                         <User user={user} />
-                                    </ProtectedRoute>
-                                }
+                                    </ProtectedRoute>}
                             />
 
                             <Route
@@ -67,6 +67,15 @@ function App() {
                                 element={
                                     <ProtectedRoute>
                                         <CreateUser user={user} />
+                                    </ProtectedRoute>
+                                }
+                            />
+
+                            <Route
+                                path="/user/:id"
+                                element={
+                                    <ProtectedRoute>
+                                        <UserEdit user={user} />
                                     </ProtectedRoute>
                                 }
                             />

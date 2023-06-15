@@ -1,16 +1,18 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from "../../components/Header";
-import {Box, IconButton, useTheme} from "@mui/material";
-import {DataGrid} from "@mui/x-data-grid";
-import {tokens} from "../../theme";
+import { Box, IconButton, useTheme, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import { tokens } from "../../theme";
 import CustomButton from "../../components/button";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const User = () => {
     const [userData, setUserData] = useState([]);
+    const [deleteConfirmation, setDeleteConfirmation] = useState({ open: false, userId: null });
     const theme = useTheme();
-    const colors = tokens(theme.palette.mode)
+    const colors = tokens(theme.palette.mode);
 
     useEffect(() => {
         async function fetchData() {
@@ -26,37 +28,69 @@ const User = () => {
         fetchData();
     }, []);
 
+    const handleDelete = (id) => {
+        setDeleteConfirmation({ open: true, userId: id });
+    };
+
+    const confirmDelete = async () => {
+        const { userId } = deleteConfirmation;
+
+        try {
+            await fetch(`http://localhost:5080/api/User/${userId}`, {
+                method: 'DELETE',
+            });
+
+            // If the deletion was successful, update the user data in the state
+            setUserData((prevData) => prevData.filter((user) => user.id !== userId));
+            console.log(`Deleted user with ID: ${userId}`);
+        } catch (error) {
+            console.log('Une erreur s\'est produite lors de la suppression du user:', error);
+        }
+
+        setDeleteConfirmation({ open: false, userId: null });
+    };
+
+    const cancelDelete = () => {
+        setDeleteConfirmation({ open: false, userId: null });
+    };
+
     const columns = [
-        {field: 'id', headerName: 'ID', width: 60},
+        { field: 'id', headerName: 'ID', width: 60 },
         {
             field: 'metier',
             headerName: 'Métier',
             flex: 1,
             valueGetter: (params) => params.row.metier.nom_metier,
         },
-        {field: 'username', headerName: 'Name', flex: 1},
-        {field: 'email', headerName: 'Email', flex: 1},
-        {field: 'year', headerName: 'Année', type: "number"},
+        { field: 'username', headerName: 'Name', flex: 1 },
+        { field: 'email', headerName: 'Email', flex: 1 },
+        { field: 'year', headerName: 'Année', type: "number" },
         {
-            field: 'edit',
-            headerName: 'Modifier',
-            width: 120,
+            field: 'actions',
+            headerName: 'Actions',
+            width: 100,
+            align: 'right',
             renderCell: (params) => (
-                <Link to={`/user/${params.row.id}`}>
-                    <IconButton>
-                        <EditIcon />
+                <Box display="flex" justifyContent="flex-end" gap={1}>
+                    <Link to={`/user/${params.row.id}`}>
+                        <IconButton size="small">
+                            <EditIcon fontSize="small" />
+                        </IconButton>
+                    </Link>
+                    <IconButton size="small" onClick={() => handleDelete(params.row.id)}>
+                        <DeleteIcon fontSize="small" />
                     </IconButton>
-                </Link>
+                </Box>
             ),
         },
     ];
 
     return (
         <Box m="20px">
-            <Header title="USER" subtitle="Liste des Users"/>
+            <Header title="USER" subtitle="Liste des Users" />
             <Box display="flex" justifyContent="flex-end" alignItems="center" margin="30px">
                 <Link to="/user/create" style={{ textDecoration: "none" }}>
-                    <CustomButton nom="CREATE USER"/>
+                    <CustomButton nom="CREATE USER" />
                 </Link>
             </Box>
             <Box m="50 0 0 0" height="auto" sx={{
@@ -84,11 +118,22 @@ const User = () => {
                     rows={userData}
                     columns={columns}
                 />
-
             </Box>
 
+            <Dialog open={deleteConfirmation.open} onClose={cancelDelete}>
+                <DialogTitle>Confirmation de suppression</DialogTitle>
+                <DialogContent>
+                    Êtes-vous sûr de vouloir supprimer cet utilisateur ?
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={cancelDelete}>Annuler</Button>
+                    <Button onClick={confirmDelete} variant="contained" color="error">
+                        Supprimer
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
-}
+};
 
 export default User;
