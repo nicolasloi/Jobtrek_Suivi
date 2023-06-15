@@ -6,7 +6,7 @@ namespace JobtrekSuivisAPI.Models
     public class User
     {
         [Key]
-        public int IdUser { get; set; }
+        public int Id { get; set; }
         
         [Required(ErrorMessage = "L'email est obligatoire.")]
         [RegularExpression(@"^[A-Za-z0-9._%+-]+@jobtrek\.ch$", ErrorMessage = "L'email doit se terminer par @jobtrek.ch.")]

@@ -17,7 +17,7 @@ public static class TokenService
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
-                new Claim(ClaimTypes.Name, user.IdUser.ToString())
+                new Claim(ClaimTypes.Name, user.Id.ToString())
             }),
             Expires = DateTime.UtcNow.AddDays(7), // Durée de validité du token (7 jours)
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

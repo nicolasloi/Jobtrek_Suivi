@@ -24,7 +24,7 @@ public class UserService : IUserService
         var user = await _context.Users
             .Include(user => user.Metier)
             .Include(user => user.Role)
-            .FirstOrDefaultAsync(user => user.IdUser == id);
+            .FirstOrDefaultAsync(user => user.Id == id);
         
         if (user is null)
             return null;
@@ -66,7 +66,7 @@ public class UserService : IUserService
         var user = await _context.Users
             .Include(user => user.Metier)
             .Include(user => user.Role)
-            .FirstOrDefaultAsync(user => user.IdUser == id);
+            .FirstOrDefaultAsync(user => user.Id == id);
     
         if (user is null)
             return null;

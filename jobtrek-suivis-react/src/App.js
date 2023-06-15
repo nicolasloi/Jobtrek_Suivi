@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { ColorModeContext, useMode } from './theme';
 import { CssBaseline, ThemeProvider } from '@mui/material';
@@ -7,7 +7,6 @@ import Dashboard from './pages/dashboard';
 import Sidebar from './pages/global/Sidebar';
 import User from './pages/user';
 import CreateUser from "./pages/user/CreateUser";
-import { setAuthToken } from "./components/setAuthToken";
 import Login from "./pages/login";
 
 
@@ -43,8 +42,6 @@ function App() {
                     <main className="content">
                         {shouldShowTopbarAndSidebar && <Topbar onLogout={handleLogout} />}
                         <Routes>
-                            <Route path="/user" element={<User />} />
-                            <Route path="/user/create" element={<CreateUser />} />
                             <Route path="/login" element={<Login setUser={setUser} />} />
 
                             <Route
@@ -55,7 +52,26 @@ function App() {
                                     </ProtectedRoute>
                                 }
                             />
-                            <Route path="*" element={<p>There's nothing here: 404!</p>} />
+
+                            <Route
+                                path="/user"
+                                element={
+                                    <ProtectedRoute>
+                                        <User user={user} />
+                                    </ProtectedRoute>
+                                }
+                            />
+
+                            <Route
+                                path="/user/create"
+                                element={
+                                    <ProtectedRoute>
+                                        <CreateUser user={user} />
+                                    </ProtectedRoute>
+                                }
+                            />
+
+                            <Route path="*" element={<p> La page que vous recherchez n'existe pas. </p>} />
                         </Routes>
                     </main>
                 </div>

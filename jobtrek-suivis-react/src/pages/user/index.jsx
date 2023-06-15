@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import Header from "../../components/Header";
-import {Box, Typography, useTheme} from "@mui/material";
+import {Box, IconButton, useTheme} from "@mui/material";
 import {DataGrid} from "@mui/x-data-grid";
 import {tokens} from "../../theme";
 import CustomButton from "../../components/button";
 import {Link} from "react-router-dom";
+import EditIcon from "@mui/icons-material/Edit";
 
 const User = () => {
     const [userData, setUserData] = useState([]);
@@ -16,8 +17,7 @@ const User = () => {
             try {
                 const response = await fetch(process.env.REACT_APP_API_URL_USER);
                 const data = await response.json();
-                const userDataWithIds = data.map((user, index) => ({...user, id: index + 1}));
-                setUserData(userDataWithIds);
+                setUserData(data);
             } catch (error) {
                 console.log('Une erreur s\'est produite lors de la récupération des données:', error);
             }
@@ -37,6 +37,18 @@ const User = () => {
         {field: 'username', headerName: 'Name', flex: 1},
         {field: 'email', headerName: 'Email', flex: 1},
         {field: 'year', headerName: 'Année', type: "number"},
+        {
+            field: 'edit',
+            headerName: 'Modifier',
+            width: 120,
+            renderCell: (params) => (
+                <Link to={`/user/${params.row.id}`}>
+                    <IconButton>
+                        <EditIcon />
+                    </IconButton>
+                </Link>
+            ),
+        },
     ];
 
     return (
