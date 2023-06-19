@@ -1,18 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 const UserEdit = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [userData, setUserData] = useState({});
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [username, setUsername] = useState('');
-    const [year, setYear] = useState(0);
-    const [metierId, setMetierId] = useState(0);
-    const [nomMetier, setNomMetier] = useState('');
-    const [roleId, setRoleId] = useState(0);
-    const [nomRole, setNomRole] = useState('');
 
     useEffect(() => {
         // Récupérer les données de l'utilisateur à modifier
@@ -20,117 +14,130 @@ const UserEdit = () => {
             .then(response => response.json())
             .then(data => {
                 setUserData(data);
-                setEmail(data.email);
-                setPassword(data.password);
-                setUsername(data.username);
-                setYear(data.year);
-                setMetierId(data.metierId);
-                setNomMetier(data.metier.nom_metier);
-                setRoleId(data.roleId);
-                setNomRole(data.role.nom_role);
+                formik.setValues({
+                    email: data.email,
+                    password: '',
+                    confirmPassword: '',
+                    username: data.username,
+                    year: data.year,
+                    metierId: data.metierId,
+                    nomMetier: data.metier.nom_metier,
+                    roleId: data.roleId,
+                    nomRole: data.role.nom_role
+                });
             })
             .catch(error => {
                 console.log('Une erreur s\'est produite lors de la récupération des données de l\'utilisateur:', error);
             });
     }, [id]);
 
-    const handleEmailChange = (event) => {
-        setEmail(event.target.value);
-    };
+    const validationSchema = Yup.object().shape({
+        email: Yup.string().email('Adresse e-mail invalide').required('Champ requis'),
+        confirmPassword: Yup.string()
+            .oneOf([Yup.ref('password'), null], 'Les mots de passe ne correspondent pas'),
+        username: Yup.string().required('Champ requis'),
+        year: Yup.number().required('Champ requis'),
+        metierId: Yup.number().required('Champ requis'),
+        nomMetier: Yup.string().required('Champ requis'),
+        roleId: Yup.number().required('Champ requis'),
+        nomRole: Yup.string().required('Champ requis'),
+    });
 
-    const handlePasswordChange = (event) => {
-        setPassword(event.target.value);
-    };
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            password: '',
+            confirmPassword: '',
+            username: '',
+            year: 0,
+            metierId: 0,
+            nomMetier: '',
+            roleId: 0,
+            nomRole: '',
+        },
+        validationSchema,
+        onSubmit: (values) => {
+            if (values.password !== values.confirmPassword) {
+                console.log('Les mots de passe ne correspondent pas.');
+                return;
+            }
 
-    const handleUsernameChange = (event) => {
-        setUsername(event.target.value);
-    };
+            const updatedUser = {
+                email: values.email,
+                password: values.password,
+                username: values.username,
+                year: values.year,
+                metierId: values.metierId,
+                metier: {
+                    idMetier: userData.metier.idMetier,
+                    nom_metier: values.nomMetier,
+                },
+                roleId: values.roleId,
+                role: {
+                    idRole: userData.role.idRole,
+                    nom_role: values.nomRole,
+                },
+            };
 
-    const handleYearChange = (event) => {
-        setYear(event.target.value);
-    };
-
-    const handleMetierIdChange = (event) => {
-        setMetierId(event.target.value);
-    };
-
-    const handleNomMetierChange = (event) => {
-        setNomMetier(event.target.value);
-    };
-
-    const handleRoleIdChange = (event) => {
-        setRoleId(event.target.value);
-    };
-
-    const handleNomRoleChange = (event) => {
-        setNomRole(event.target.value);
-    };
-
-    const handleUpdateUser = (event) => {
-        event.preventDefault();
-
-        // Effectuer la mise à jour de l'utilisateur avec les nouvelles données
-        const updatedUser = {
-            email,
-            password,
-            username,
-            year,
-            metierId,
-            metier: {
-                idMetier: userData.metier.idMetier,
-                nom_metier: nomMetier,
-            },
-            roleId,
-            role: {
-                idRole: userData.role.idRole,
-                nom_role: nomRole,
-            },
-        };
-
-        fetch(`http://localhost:5080/api/User/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(updatedUser),
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Utilisateur mis à jour avec succès:', data);
-                navigate('/user'); // Rediriger vers la liste des utilisateurs après la mise à jour
+            fetch(`http://localhost:5080/api/User/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedUser),
             })
-            .catch(error => {
-                console.log('Une erreur s\'est produite lors de la mise à jour de l\'utilisateur:', error);
-            });
-    };
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Utilisateur mis à jour avec succès:', data);
+                    navigate('/user');
+                })
+                .catch(error => {
+                    console.log('Une erreur s\'est produite lors de la mise à jour de l\'utilisateur:', error);
+                });
+        },
+    });
+
+    const { handleSubmit, handleChange, values, errors } = formik;
 
     return (
         <div>
-            <h1>Modifier l'utilisateur {username}</h1>
-            <form onSubmit={handleUpdateUser}>
+            <h1>Modifier l'utilisateur {values.username}</h1>
+            <form onSubmit={handleSubmit}>
                 <label>Email:</label>
-                <input type="email" value={email} onChange={handleEmailChange} required />
+                <input type="email" name="email" value={values.email} onChange={handleChange} required />
+                {errors.email && <div>{errors.email}</div>}
 
                 <label>Password:</label>
-                <input type="password" value={password} onChange={handlePasswordChange} required />
+                <input type="password" name="password" value={values.password} onChange={handleChange} required />
+                {errors.password && <div>{errors.password}</div>}
+
+                <label>Confirm Password:</label>
+                <input type="password" name="confirmPassword" value={values.confirmPassword} onChange={handleChange} required />
+                {errors.confirmPassword && <div>{errors.confirmPassword}</div>}
 
                 <label>Username:</label>
-                <input type="text" value={username} onChange={handleUsernameChange} required />
+                <input type="text" name="username" value={values.username} onChange={handleChange} required />
+                {errors.username && <div>{errors.username}</div>}
 
                 <label>Year:</label>
-                <input type="number" value={year} onChange={handleYearChange} required />
+                <input type="number" name="year" value={values.year} onChange={handleChange} required />
+                {errors.year && <div>{errors.year}</div>}
 
                 <label>Metier ID:</label>
-                <input type="number" value={metierId} onChange={handleMetierIdChange} required />
+                <input type="number" name="metierId" value={values.metierId} onChange={handleChange} required />
+                {errors.metierId && <div>{errors.metierId}</div>}
 
                 <label>Nom Metier:</label>
-                <input type="text" value={nomMetier} onChange={handleNomMetierChange} required />
+                <input type="text" name="nomMetier" value={values.nomMetier} onChange={handleChange} required />
+                {errors.nomMetier && <div>{errors.nomMetier}</div>}
 
                 <label>Role ID:</label>
-                <input type="number" value={roleId} onChange={handleRoleIdChange} required />
+                <input type="number" name="roleId" value={values.roleId} onChange={handleChange} required />
+                {errors.roleId && <div>{errors.roleId}</div>}
 
                 <label>Nom Role:</label>
-                <input type="text" value={nomRole} onChange={handleNomRoleChange} required />
+                <input type="text" name="nomRole" value={values.nomRole} onChange={handleChange} required />
+                {errors.nomRole && <div>{errors.nomRole}</div>}
 
                 <button type="submit">Enregistrer</button>
             </form>
