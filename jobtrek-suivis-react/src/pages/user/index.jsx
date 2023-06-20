@@ -70,6 +70,7 @@ const User = () => {
             headerName: 'Actions',
             width: 100,
             align: 'right',
+            headerAlign: 'center',
             renderCell: (params) => (
                 <Box display="flex" justifyContent="flex-end" gap={1}>
                     <Link to={`/user/${params.row.id}`}>

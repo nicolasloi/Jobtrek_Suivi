@@ -1,49 +1,122 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import {
+    Box,
+    Button,
+    TextField,
+    FormControl,
+    InputLabel,
+    FormHelperText,
+    Grid,
+    Typography,
+    Select,
+    MenuItem
+} from '@mui/material';
+import * as yup from "yup";
+import Header from "../../components/Header";
+import CustomButton from "../../components/button";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const UserEdit = () => {
     const { id } = useParams();
+    const isNonMobile = useMediaQuery("(min-width:600px)");
     const navigate = useNavigate();
     const [userData, setUserData] = useState({});
+    const [roles, setRoles] = useState([]);
+    const [metiers, setMetiers] = useState([]);
 
     const currentDate = new Date();
     const currentCreatedAt = currentDate.toISOString();
 
     useEffect(() => {
-        // Récupérer les données de l'utilisateur à modifier
-        fetch(`http://localhost:5080/api/User/${id}`)
-            .then(response => response.json())
-            .then(data => {
-                setUserData(data);
-                formik.setValues({
-                    email: data.email,
-                    password: '',
-                    confirmPassword: '',
-                    username: data.username,
-                    year: data.year,
-                    metierId: data.metierId,
-                    nomMetier: data.metier.nom_metier,
-                    roleId: data.roleId,
-                    nomRole: data.role.nom_role
-                });
-            })
-            .catch(error => {
-                console.log('Une erreur s\'est produite lors de la récupération des données de l\'utilisateur:', error);
-            });
+        const fetchUserData = async () => {
+            try {
+                const response = await fetch(`http://localhost:5080/api/User/${id}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setUserData(data);
+                    formik.setValues({
+                        email: data.email,
+                        password: '',
+                        confirmPassword: '',
+                        username: data.username,
+                        year: data.year,
+                        metierId: data.metierId,
+                        metier: {
+                            nom_metier: data.metier ? data.metier.nom_metier : "string",
+                        },
+                        roleId: data.roleId,
+                        role: {
+                            nom_role: data.role ? data.role.nom_role : "string",
+                        },
+                    });
+                } else {
+                    console.error("Une erreur s'est produite lors de la récupération des données de l'utilisateur.");
+                }
+            } catch (error) {
+                console.error("Une erreur s'est produite lors de la récupération des données de l'utilisateur:", error);
+            }
+        };
+
+        const fetchMetiers = async () => {
+            try {
+                const response = await fetch(process.env.REACT_APP_API_URL_METIERS);
+                if (response.ok) {
+                    const data = await response.json();
+                    setMetiers(data);
+                } else {
+                    console.error("Une erreur s'est produite lors de la récupération des métiers.");
+                }
+            } catch (error) {
+                console.error("Une erreur s'est produite lors de la récupération des métiers:", error);
+            }
+        };
+
+        const fetchRoles = async () => {
+            try {
+                const response = await fetch(process.env.REACT_APP_API_URL_ROLES);
+                if (response.ok) {
+                    const data = await response.json();
+                    setRoles(data);
+                } else {
+                    console.error("Une erreur s'est produite lors de la récupération des rôles.");
+                }
+            } catch (error) {
+                console.error("Une erreur s'est produite lors de la récupération des rôles:", error);
+            }
+        };
+
+        fetchUserData();
+        fetchMetiers();
+        fetchRoles();
     }, [id]);
 
     const validationSchema = Yup.object().shape({
-        email: Yup.string().email('Adresse e-mail invalide').required('Champ requis'),
-        confirmPassword: Yup.string()
-            .oneOf([Yup.ref('password'), null], 'Les mots de passe ne correspondent pas'),
-        username: Yup.string().required('Champ requis'),
-        year: Yup.number().required('Champ requis'),
-        metierId: Yup.number().required('Champ requis'),
-        nomMetier: Yup.string().required('Champ requis'),
-        roleId: Yup.number().required('Champ requis'),
-        nomRole: Yup.string().required('Champ requis'),
+        email: yup
+            .string()
+            .email("Email invalide")
+            .required("L'email est obligatoire.")
+            .matches(/^[A-Za-z0-9._%+-]+@jobtrek\.ch$/, "L'email doit se terminer par @jobtrek.ch."),
+        password: yup
+            .string()
+            .required("Le mot de passe est obligatoire.")
+            .min(8, "Le mot de passe doit contenir au moins 8 caractères."),
+        confirmPassword: yup
+            .string()
+            .oneOf([yup.ref('password'), null], 'Les mots de passe doivent correspondre.'),
+        username: yup
+            .string()
+            .required("Le nom d'utilisateur est obligatoire.")
+            .max(30, "Le nom d'utilisateur ne peut pas dépasser 30 caractères."),
+        year: yup
+            .number()
+            .required("L'année est obligatoire.")
+            .min(1, "L'année doit être supérieure ou égale à 1.")
+            .max(4, "L'année doit être inférieure ou égale à 4."),
+        metierId: yup.number().required("L'ID du métier est obligatoire."),
+        roleId: yup.number().required("L'ID du rôle est obligatoire."),
     });
 
     const formik = useFormik({
@@ -78,13 +151,13 @@ const UserEdit = () => {
                 year: values.year,
                 metierId: values.metierId,
                 metier: {
-                    idMetier: userData.metier.idMetier,
-                    nom_metier: values.nomMetier,
+                    idMetier: userData.metier ? userData.metier.idMetier : null,
+                    nom_metier: values.metier ? values.metier.nom_metier : "string",
                 },
                 roleId: values.roleId,
                 role: {
-                    idRole: userData.role.idRole,
-                    nom_role: values.nomRole,
+                    idRole: userData.role ? userData.role.idRole : null,
+                    nom_role: values.role ? values.role.nom_role : "string",
                 },
             };
 
@@ -109,40 +182,123 @@ const UserEdit = () => {
     const { handleSubmit, handleChange, values, errors } = formik;
 
     return (
-        <div>
-            <h1>Modifier l'utilisateur {values.username}</h1>
+        <Box m="20px">
+            <Header title="MODIFY USER" subtitle="Modifier le profil de l'utilisateur" />
             <form onSubmit={handleSubmit}>
-                <label>Email:</label>
-                <input type="email" name="email" value={values.email} onChange={handleChange} required />
-                {errors.email && <div>{errors.email}</div>}
+                <Box display="flex" flexDirection="column" gap="30px">
+                    <FormControl>
+                        <TextField
+                            type="email"
+                            name="email"
+                            value={values.email}
+                            onChange={handleChange}
+                            label="Email"
+                            error={!!errors.email}
+                        />
+                        {errors.email && <FormHelperText>{errors.email}</FormHelperText>}
+                    </FormControl>
+                    <FormControl>
+                        <TextField
+                            type="password"
+                            name="password"
+                            value={values.password}
+                            onChange={handleChange}
+                            label="Password"
+                            error={!!errors.password}
+                        />
+                        {errors.password && <FormHelperText>{errors.password}</FormHelperText>}
+                    </FormControl>
+                    <FormControl>
+                        <TextField
+                            type="password"
+                            name="confirmPassword"
+                            value={values.confirmPassword}
+                            onChange={handleChange}
+                            label="Confirm Password"
+                            error={!!errors.confirmPassword}
+                        />
+                        {errors.confirmPassword && <FormHelperText>{errors.confirmPassword}</FormHelperText>}
+                    </FormControl>
+                    <FormControl>
+                        <TextField
+                            type="text"
+                            name="username"
+                            value={values.username}
+                            onChange={handleChange}
+                            label="Username"
+                            error={!!errors.username}
+                        />
+                        {errors.username && <FormHelperText>{errors.username}</FormHelperText>}
+                    </FormControl>
+                    <FormControl>
+                        <TextField
+                            type="number"
+                            name="year"
+                            value={values.year}
+                            onChange={handleChange}
+                            label="Year"
+                            error={!!errors.year}
+                        />
+                        {errors.year && <FormHelperText>{errors.year}</FormHelperText>}
+                    </FormControl>
+                    <FormControl>
+                        <Select
+                            fullWidth
+                            variant="filled"
+                            name="metierId"
+                            value={values.metierId}
+                            onChange={handleChange}
+                            label="Metier ID"
+                            error={!!errors.metierId}
+                        >
+                            {metiers.map((metier) => (
+                                <MenuItem key={metier.idMetier} value={metier.idMetier}>
+                                    {metier.nom_metier}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        {errors.metierId && <FormHelperText>{errors.metierId}</FormHelperText>}
+                    </FormControl>
+                    <FormControl>
+                        <Select
+                            fullWidth
+                            variant="filled"
+                            name="roleId"
+                            value={values.roleId}
+                            onChange={handleChange}
+                            label="Role ID"
+                            error={!!errors.roleId}
+                        >
+                            {roles.map((role) => (
+                                <MenuItem key={role.idRole} value={role.idRole}>
+                                    {role.nom_role}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        {errors.roleId && <FormHelperText>{errors.roleId}</FormHelperText>}
+                    </FormControl>
+                    <Box display="flex" justifyContent="space-between">
+                        <Link to="/user" style={{ textDecoration: "none" }}>
+                            <CustomButton nom="Retour" />
+                        </Link>
 
-                <label>Password:</label>
-                <input type="password" name="password" value={values.password} onChange={handleChange} required />
-                {errors.password && <div>{errors.password}</div>}
-
-                <label>Confirm Password:</label>
-                <input type="password" name="confirmPassword" value={values.confirmPassword} onChange={handleChange} required />
-                {errors.confirmPassword && <div>{errors.confirmPassword}</div>}
-
-                <label>Username:</label>
-                <input type="text" name="username" value={values.username} onChange={handleChange} required />
-                {errors.username && <div>{errors.username}</div>}
-
-                <label>Year:</label>
-                <input type="number" name="year" value={values.year} onChange={handleChange} required />
-                {errors.year && <div>{errors.year}</div>}
-
-                <label>Metier ID:</label>
-                <input type="number" name="metierId" value={values.metierId} onChange={handleChange} required />
-                {errors.metierId && <div>{errors.metierId}</div>}
-
-                <label>Role ID:</label>
-                <input type="number" name="roleId" value={values.roleId} onChange={handleChange} required />
-                {errors.roleId && <div>{errors.roleId}</div>}
-
-                <button type="submit">Enregistrer</button>
+                        <Button
+                            type="submit"
+                            color="secondary"
+                            variant="contained"
+                            sx={{
+                                fontWeight: 800,
+                                fontSize: "14px",
+                                lineHeight: "20px",
+                                color: "#FFFFFF",
+                            }}
+                        >
+                            Enregistrer
+                        </Button>
+                    </Box>
+                </Box>
             </form>
-        </div>
+        </Box>
     );
 };
 
