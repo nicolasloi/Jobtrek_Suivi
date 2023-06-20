@@ -92,7 +92,7 @@ public class UserService : IUserService
         }
 
         user.email = request.email;
-        user.password = Security.HashPassword(request.password);
+        user.password = request.password;
         user.username = request.username;
         user.CreatedAt = request.CreatedAt;
         user.RoleId = request.RoleId;

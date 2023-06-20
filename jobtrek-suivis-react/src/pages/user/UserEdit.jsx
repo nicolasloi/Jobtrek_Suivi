@@ -8,6 +8,9 @@ const UserEdit = () => {
     const navigate = useNavigate();
     const [userData, setUserData] = useState({});
 
+    const currentDate = new Date();
+    const currentCreatedAt = currentDate.toISOString();
+
     useEffect(() => {
         // Récupérer les données de l'utilisateur à modifier
         fetch(`http://localhost:5080/api/User/${id}`)
@@ -49,11 +52,16 @@ const UserEdit = () => {
             password: '',
             confirmPassword: '',
             username: '',
+            createdAt: currentCreatedAt,
             year: 0,
-            metierId: 0,
-            nomMetier: '',
-            roleId: 0,
-            nomRole: '',
+            metierId: null,
+            metier: {
+                nom_metier: "string",
+            },
+            roleId: null,
+            role: {
+                nom_role: "string",
+            },
         },
         validationSchema,
         onSubmit: (values) => {
@@ -66,6 +74,7 @@ const UserEdit = () => {
                 email: values.email,
                 password: values.password,
                 username: values.username,
+                createdAt: currentCreatedAt,
                 year: values.year,
                 metierId: values.metierId,
                 metier: {
@@ -127,17 +136,9 @@ const UserEdit = () => {
                 <input type="number" name="metierId" value={values.metierId} onChange={handleChange} required />
                 {errors.metierId && <div>{errors.metierId}</div>}
 
-                <label>Nom Metier:</label>
-                <input type="text" name="nomMetier" value={values.nomMetier} onChange={handleChange} required />
-                {errors.nomMetier && <div>{errors.nomMetier}</div>}
-
                 <label>Role ID:</label>
                 <input type="number" name="roleId" value={values.roleId} onChange={handleChange} required />
                 {errors.roleId && <div>{errors.roleId}</div>}
-
-                <label>Nom Role:</label>
-                <input type="text" name="nomRole" value={values.nomRole} onChange={handleChange} required />
-                {errors.nomRole && <div>{errors.nomRole}</div>}
 
                 <button type="submit">Enregistrer</button>
             </form>
