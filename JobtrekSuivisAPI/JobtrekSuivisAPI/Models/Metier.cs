@@ -6,7 +6,7 @@ namespace JobtrekSuivisAPI.Models;
 public class Metier
 {
     [Key]
-    public int IdMetier { get; set; }
+    public int Id { get; set; }
 
     [Required(ErrorMessage = "Le nom du metier est obligatoire.")]
     [RegularExpression(@"^[a-zA-Z0-9\s-]+$", ErrorMessage = "Le nom du métier ne doit contenir que des lettres, des chiffres, des espaces et des tirets.")]

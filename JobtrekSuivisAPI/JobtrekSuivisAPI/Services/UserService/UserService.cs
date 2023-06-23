@@ -35,7 +35,7 @@ public class UserService : IUserService
     public async Task<List<User>> AddUser(User user)
     {
         
-        var metier = await _context.Metiers.FirstOrDefaultAsync(m => m.IdMetier == user.MetierId);
+        var metier = await _context.Metiers.FirstOrDefaultAsync(m => m.Id == user.MetierId);
     
         if (metier is null)
         {
@@ -82,7 +82,7 @@ public class UserService : IUserService
         }
 
         // Vérifier si le métier demandé existe déjà dans la base de données
-        var metier = await _context.Metiers.FirstOrDefaultAsync(m => m.IdMetier == request.MetierId);
+        var metier = await _context.Metiers.FirstOrDefaultAsync(m => m.Id == request.MetierId);
     
         if (metier is null)
         {

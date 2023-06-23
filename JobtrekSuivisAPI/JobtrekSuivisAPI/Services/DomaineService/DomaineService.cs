@@ -38,7 +38,7 @@ namespace JobtrekSuivisAPI.Services.DomaineService
 
         public async Task<List<Domaine>> AddDomaine(Domaine domaine)
         {
-            var metier = await _context.Metiers.FirstOrDefaultAsync(m => m.IdMetier == domaine.MetierId);
+            var metier = await _context.Metiers.FirstOrDefaultAsync(m => m.Id == domaine.MetierId);
 
             if (metier is null)
             {
@@ -62,7 +62,7 @@ namespace JobtrekSuivisAPI.Services.DomaineService
             if (domaine is null)
                 return null;
 
-            var metier = await _context.Metiers.FirstOrDefaultAsync(m => m.IdMetier == request.MetierId);
+            var metier = await _context.Metiers.FirstOrDefaultAsync(m => m.Id == request.MetierId);
 
             if (metier is null)
             {

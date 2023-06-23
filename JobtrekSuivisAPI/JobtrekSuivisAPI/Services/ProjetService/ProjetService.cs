@@ -30,7 +30,7 @@ public class ProjetService : IProjetService
 
     public async Task<List<Projet>> AddProjet(Projet projet)
     {
-        var metier = await _context.Metiers.FirstOrDefaultAsync(m => m.IdMetier == projet.MetierId);
+        var metier = await _context.Metiers.FirstOrDefaultAsync(m => m.Id == projet.MetierId);
 
         if (metier is null)
         {
@@ -54,7 +54,7 @@ public class ProjetService : IProjetService
         if (projet is null)
             return null;
         
-        var metier = await _context.Metiers.FirstOrDefaultAsync(m => m.IdMetier == request.MetierId);
+        var metier = await _context.Metiers.FirstOrDefaultAsync(m => m.Id == request.MetierId);
     
         if (metier is null)
         {

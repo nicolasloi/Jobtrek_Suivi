@@ -9,6 +9,7 @@ import User from './pages/user';
 import CreateUser from "./pages/user/CreateUser";
 import Login from "./pages/login";
 import UserEdit from "./pages/user/UserEdit";
+import Metier from "./pages/metier";
 
 
 function App() {
@@ -76,6 +77,15 @@ function App() {
                                 element={
                                     <ProtectedRoute>
                                         <UserEdit user={user} />
+                                    </ProtectedRoute>
+                                }
+                            />
+
+                            <Route
+                                path="/metier"
+                                element={
+                                    <ProtectedRoute>
+                                        <Metier user={user} />
                                     </ProtectedRoute>
                                 }
                             />
