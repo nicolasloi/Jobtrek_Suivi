@@ -7,14 +7,15 @@ import CustomButton from "../../components/button";
 import React, {useEffect, useState} from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-const CreateMetier = () => {
+const MetierEdit = () => {
+    const { id } = useParams();
     const isNonMobile = useMediaQuery("(min-width:600px)");
     const params = useParams();
     const navigate = useNavigate();
     const handleFormSubmit = async (values, {setErrors}) => {
         try {
-            const response = await fetch(process.env.REACT_APP_API_URL_METIERS, {
-                method: "POST",
+            const response = await fetch(`${process.env.REACT_APP_API_URL_METIERS}/${id}`, {
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -46,7 +47,7 @@ const CreateMetier = () => {
 
     return (
         <Box m="20px">
-            <Header title="CREATE METIER" subtitle="Créer un nouveau metier"/>
+            <Header title="MODIFY METIER" subtitle="Modifier un metier"/>
             <Formik
                 onSubmit={handleFormSubmit}
                 initialValues={initialValues}
@@ -77,7 +78,7 @@ const CreateMetier = () => {
                                 label="Nom du metier"
                                 onBlur={handleBlur}
                                 onChange={handleChange}
-                                value={values.nom_metier}
+                                value={values.username}
                                 name="nom_metier"
                                 error={!!touched.nom_metier && !!errors.nom_metier}
                                 helperText={touched.nom_metier && errors.nom_metier}
@@ -100,7 +101,7 @@ const CreateMetier = () => {
                                     color: "#FFFFFF",
                                 }}
                             >
-                                Create New Metier
+                                Enregistrer
                             </Button>
                         </Box>
                     </form>
@@ -111,4 +112,4 @@ const CreateMetier = () => {
         ;
 };
 
-export default CreateMetier;
+export default MetierEdit;

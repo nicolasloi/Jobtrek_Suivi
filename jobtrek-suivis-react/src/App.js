@@ -11,6 +11,7 @@ import Login from "./pages/login";
 import UserEdit from "./pages/user/UserEdit";
 import Metier from "./pages/metier";
 import CreateMetier from "./pages/metier/CreateMetier";
+import MetierEdit from "./pages/metier/MetierEdit";
 
 
 function App() {
@@ -96,6 +97,15 @@ function App() {
                                 element={
                                     <ProtectedRoute>
                                         <CreateMetier user={user}/>
+                                    </ProtectedRoute>
+                                }
+                            />
+
+                            <Route
+                                path="/metier/:id"
+                                element={
+                                    <ProtectedRoute>
+                                        <MetierEdit user={user}/>
                                     </ProtectedRoute>
                                 }
                             />
