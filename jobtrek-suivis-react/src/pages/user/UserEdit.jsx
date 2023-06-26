@@ -45,7 +45,7 @@ const UserEdit = () => {
                         year: data.year,
                         metierId: data.metierId,
                         metier: {
-                            nom_metier: data.metier ? data.metier.nom_metier : "string",
+                            NomMetier: data.metier ? data.metier.NomMetier : "string",
                         },
                         roleId: data.roleId,
                         role: {
@@ -129,7 +129,7 @@ const UserEdit = () => {
             year: 0,
             metierId: null,
             metier: {
-                nom_metier: "string",
+                NomMetier: "string",
             },
             roleId: null,
             role: {
@@ -152,7 +152,7 @@ const UserEdit = () => {
                 metierId: values.metierId,
                 metier: {
                     idMetier: userData.metier ? userData.metier.idMetier : null,
-                    nom_metier: values.metier ? values.metier.nom_metier : "string",
+                    NomMetier: values.metier ? values.metier.NomMetier : "string",
                 },
                 roleId: values.roleId,
                 role: {
@@ -253,7 +253,7 @@ const UserEdit = () => {
                         >
                             {metiers.map((metier) => (
                                 <MenuItem key={metier.idMetier} value={metier.idMetier}>
-                                    {metier.nom_metier}
+                                    {metier.NomMetier}
                                 </MenuItem>
                             ))}
                         </Select>

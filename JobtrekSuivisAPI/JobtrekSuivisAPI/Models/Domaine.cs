@@ -12,9 +12,8 @@ public class Domaine
     [JsonIgnore]
     public int MetierId { get; set; }
     
-    [JsonIgnore]
     public Metier Metier { get; set; } = null!;
     
     
-    public ICollection<Competence> Competences { get; } = new List<Competence>();
+    public ICollection<Competence> Competences { get; set; } = new List<Competence>();
 }

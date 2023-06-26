@@ -26,11 +26,66 @@ public class MetierService : IMetierService
 
     public async Task<List<Metier>> AddMetier(Metier metier)
     {
-        _context.Metiers.Add(metier);
-        await _context.SaveChangesAsync();
-        
-        return await _context.Metiers.ToListAsync();
+        try
+        {
+            foreach (var domaine in metier.Domaines)
+            {
+                var existingDomaine = await _context.Domaines.FirstOrDefaultAsync(d => d.IdDomaine == domaine.IdDomaine);
+                if (existingDomaine != null)
+                {
+                    domaine.IdDomaine = existingDomaine.IdDomaine;
+                }
+                else
+                {
+                    _context.Domaines.Add(domaine);
+                }
+
+                foreach (var competence in domaine.Competences)
+                {
+                    var existingCompetence = await _context.Competences.FirstOrDefaultAsync(c => c.IdCompetence == competence.IdCompetence);
+                    if (existingCompetence != null)
+                    {
+                        competence.IdCompetence = existingCompetence.IdCompetence;
+                    }
+                    else
+                    {
+                        _context.Competences.Add(competence);
+                    }
+
+                    foreach (var moduleCompetence in competence.ModuleCompetences)
+                    {
+                        var existingModuleCompetence = await _context.ModuleCompetences.FirstOrDefaultAsync(mc => mc.IdModuleCompetence == moduleCompetence.IdModuleCompetence);
+                        if (existingModuleCompetence != null)
+                        {
+                            moduleCompetence.IdModuleCompetence = existingModuleCompetence.IdModuleCompetence;
+                        }
+                        else
+                        {
+                            _context.ModuleCompetences.Add(moduleCompetence);
+                        }
+                    }
+                }
+            }
+            
+            _context.Metiers.Add(metier);
+            await _context.SaveChangesAsync();
+            
+            var result = await _context.Metiers
+                .Include(m => m.Domaines)
+                    .ThenInclude(d => d.Competences)
+                        .ThenInclude(c => c.ModuleCompetences)
+                            .ThenInclude(mc => mc.Module)
+                .ToListAsync();
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Une erreur s'est produite lors de l'ajout du métier : {ex.Message}");
+        }
     }
+
+
 
     public async Task<List<Metier>?> UpdateMetier(int id, Metier request)
     {
@@ -38,7 +93,7 @@ public class MetierService : IMetierService
         if (metier is null)
             return null;
         
-        metier.nom_metier = request.nom_metier;
+        metier.NomMetier = request.NomMetier;
 
         await _context.SaveChangesAsync();
         

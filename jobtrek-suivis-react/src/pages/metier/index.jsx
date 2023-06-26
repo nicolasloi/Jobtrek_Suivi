@@ -56,7 +56,7 @@ const Metier = () => {
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 60 },
-        { field: 'nom_metier', headerName: 'Nom', flex: 1 },
+        { field: 'NomMetier', headerName: 'Nom', flex: 1 },
         {
             field: 'actions',
             headerName: 'Actions',
