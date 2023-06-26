@@ -102,7 +102,7 @@ const CreateUser = () => {
         year: null,
         metierId: null,
         metier: {
-            NomMetier: "string",
+            nom_metier: "string",
         },
         roleId: null,
         role: {
@@ -206,7 +206,7 @@ const CreateUser = () => {
                             >
                                 {metiers.map((metier) => (
                                     <MenuItem key={metier.id} value={metier.id}>
-                                        {metier.NomMetier}
+                                        {metier.nom_metier}
                                     </MenuItem>
                                 ))}
                             </Select>

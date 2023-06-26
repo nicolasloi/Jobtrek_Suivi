@@ -136,7 +136,7 @@ namespace JobtrekSuivisAPI.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("NomMetier")
+                    b.Property<string>("nom_metier")
                         .IsRequired()
                         .HasMaxLength(75)
                         .HasColumnType("character varying(75)");

@@ -11,18 +11,18 @@ namespace JobtrekSuivisAPI.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.RenameColumn(
-                name: "nom_metier",
+                name: "NomMetier",
                 table: "Metiers",
-                newName: "NomMetier");
+                newName: "nom_metier");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.RenameColumn(
-                name: "NomMetier",
+                name: "nom_metier",
                 table: "Metiers",
-                newName: "nom_metier");
+                newName: "NomMetier");
         }
     }
 }

@@ -93,7 +93,7 @@ public class MetierService : IMetierService
         if (metier is null)
             return null;
         
-        metier.NomMetier = request.NomMetier;
+        metier.nom_metier = request.nom_metier;
 
         await _context.SaveChangesAsync();
         

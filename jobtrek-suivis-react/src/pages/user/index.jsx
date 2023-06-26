@@ -60,7 +60,7 @@ const User = () => {
             field: 'metier',
             headerName: 'Métier',
             flex: 1,
-            valueGetter: (params) => params.row.metier.NomMetier,
+            valueGetter: (params) => params.row.metier.nom_metier,
         },
         { field: 'username', headerName: 'Name', flex: 1 },
         { field: 'email', headerName: 'Email', flex: 1 },

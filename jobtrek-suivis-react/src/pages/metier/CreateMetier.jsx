@@ -33,7 +33,7 @@ const CreateMetier = () => {
     };
 
     const checkoutSchema = yup.object().shape({
-        NomMetier: yup
+        nom_metier: yup
             .string()
             .required("Le nom du métier est obligatoire.")
             .matches(/^[a-zA-Z0-9\s-]+$/, "Le nom du métier ne doit contenir que des lettres, des chiffres, des espaces et des tirets.")
@@ -41,7 +41,7 @@ const CreateMetier = () => {
     });
 
     const initialValues = {
-        NomMetier: "",
+        nom_metier: "",
         domaines: [],
     };
 
@@ -79,10 +79,10 @@ const CreateMetier = () => {
                                 label="Nom du métier"
                                 onBlur={handleBlur}
                                 onChange={handleChange}
-                                value={values.NomMetier}
-                                name="NomMetier"
-                                error={!!touched.NomMetier && !!errors.NomMetier}
-                                helperText={touched.NomMetier && errors.NomMetier}
+                                value={values.nom_metier}
+                                name="nom_metier"
+                                error={!!touched.nom_metier && !!errors.nom_metier}
+                                helperText={touched.nom_metier && errors.nom_metier}
                                 sx={{ gridColumn: "span 4" }}
                             />
                         </Box>

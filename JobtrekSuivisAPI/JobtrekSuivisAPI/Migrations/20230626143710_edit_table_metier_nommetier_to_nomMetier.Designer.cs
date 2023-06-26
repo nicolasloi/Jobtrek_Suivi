@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JobtrekSuivisAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230626142722_edit_table_metier_nommetier_to_nomMetier")]
+    [Migration("20230626143710_edit_table_metier_nommetier_to_nomMetier")]
     partial class edit_table_metier_nommetier_to_nomMetier
     {
         /// <inheritdoc />
@@ -139,7 +139,7 @@ namespace JobtrekSuivisAPI.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("NomMetier")
+                    b.Property<string>("nom_metier")
                         .IsRequired()
                         .HasMaxLength(75)
                         .HasColumnType("character varying(75)");
