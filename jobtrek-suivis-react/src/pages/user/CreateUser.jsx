@@ -202,10 +202,10 @@ const CreateUser = () => {
                                 name="metierId"
                                 error={!!touched.metierId && !!errors.metierId}
                                 helperText={touched.metierId && errors.metierId}
-                                sx={{gridColumn: "span 4"}}
+                                sx={{ gridColumn: "span 4" }}
                             >
                                 {metiers.map((metier) => (
-                                    <MenuItem key={metier.idMetier} value={metier.idMetier}>
+                                    <MenuItem key={metier.id} value={metier.id}>
                                         {metier.nom_metier}
                                     </MenuItem>
                                 ))}
