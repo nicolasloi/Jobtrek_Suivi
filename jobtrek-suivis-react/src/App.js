@@ -13,6 +13,7 @@ import Metier from "./pages/metier";
 import CreateMetier from "./pages/metier/CreateMetier";
 import MetierEdit from "./pages/metier/MetierEdit";
 import CreateProjet from "./pages/projet/CreateProjet";
+import Projet from "./pages/projet";
 
 
 function App() {
@@ -115,7 +116,7 @@ function App() {
                                 path="/projet"
                                 element={
                                     <ProtectedRoute>
-                                        <CreateUser user={user}/>
+                                        <Projet user={user}/>
                                     </ProtectedRoute>
                                 }
                             />

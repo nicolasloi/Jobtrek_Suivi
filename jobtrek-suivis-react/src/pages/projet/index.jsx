@@ -8,18 +8,18 @@ import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const User = () => {
-    const [userData, setUserData] = useState([]);
-    const [deleteConfirmation, setDeleteConfirmation] = useState({ open: false, userId: null });
+const Projet = () => {
+    const [projetData, setProjetData] = useState([]);
+    const [deleteConfirmation, setDeleteConfirmation] = useState({ open: false, projetId: null });
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
 
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await fetch(process.env.REACT_APP_API_URL_PROJET);
+                const response = await fetch('http://localhost:5080/api/Projet');
                 const data = await response.json();
-                setUserData(data);
+                setProjetData(data);
             } catch (error) {
                 console.log('Une erreur s\'est produite lors de la récupération des données:', error);
             }
@@ -29,42 +29,36 @@ const User = () => {
     }, []);
 
     const handleDelete = (id) => {
-        setDeleteConfirmation({ open: true, userId: id });
+        setDeleteConfirmation({ open: true, projetId: id });
     };
 
     const confirmDelete = async () => {
-        const { userId } = deleteConfirmation;
+        const { projetId } = deleteConfirmation;
 
         try {
-            await fetch(`http://localhost:5080/api/User/${userId}`, {
+            await fetch(`http://localhost:5080/api/Projet/${projetId}`, {
                 method: 'DELETE',
             });
 
-            // If the deletion was successful, update the user data in the state
-            setUserData((prevData) => prevData.filter((user) => user.id !== userId));
-            console.log(`Deleted user with ID: ${userId}`);
+            // Si la suppression a réussi, mettez à jour les données des projets dans l'état
+            setProjetData((prevData) => prevData.filter((projet) => projet.id !== projetId));
+            console.log(`Projet supprimé avec l'ID: ${projetId}`);
         } catch (error) {
-            console.log('Une erreur s\'est produite lors de la suppression du user:', error);
+            console.log('Une erreur s\'est produite lors de la suppression du projet:', error);
         }
 
-        setDeleteConfirmation({ open: false, userId: null });
+        setDeleteConfirmation({ open: false, projetId: null });
     };
 
     const cancelDelete = () => {
-        setDeleteConfirmation({ open: false, userId: null });
+        setDeleteConfirmation({ open: false, projetId: null });
     };
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 60 },
-        {
-            field: 'metier',
-            headerName: 'Métier',
-            flex: 1,
-            valueGetter: (params) => params.row.metier.nom_metier,
-        },
-        { field: 'username', headerName: 'Name', flex: 1 },
-        { field: 'email', headerName: 'Email', flex: 1 },
-        { field: 'year', headerName: 'Année', type: "number" },
+        { field: 'nom_projet', headerName: 'Nom Projet', flex: 1 },
+        { field: 'desc_projet', headerName: 'Description Projet', flex: 1 },
+        { field: 'time_estimed', headerName: 'Temps Estimé', flex: 1 },
         {
             field: 'actions',
             headerName: 'Actions',
@@ -73,7 +67,7 @@ const User = () => {
             headerAlign: 'center',
             renderCell: (params) => (
                 <Box display="flex" justifyContent="flex-end" gap={1}>
-                    <Link to={`/user/${params.row.id}`}>
+                    <Link to={`/projet/${params.row.id}`}>
                         <IconButton size="small">
                             <EditIcon fontSize="small" />
                         </IconButton>
@@ -88,10 +82,10 @@ const User = () => {
 
     return (
         <Box m="20px">
-            <Header title="USER" subtitle="Liste des Users" />
+            <Header title="PROJET" subtitle="Liste des Projets" />
             <Box display="flex" justifyContent="flex-end" alignItems="center" margin="30px">
-                <Link to="/user/create" style={{ textDecoration: "none" }}>
-                    <CustomButton nom="CREATE USER" />
+                <Link to="/projet/create" style={{ textDecoration: "none" }}>
+                    <CustomButton nom="CREATE PROJET" />
                 </Link>
             </Box>
             <Box m="50 0 0 0" height="auto" sx={{
@@ -116,21 +110,21 @@ const User = () => {
                 },
             }}>
                 <DataGrid
-                    rows={userData}
+                    rows={projetData}
                     columns={columns}
                     initialState={{
                         pagination: {
                             paginationModel: { page: 0, pageSize: 10 },
                         },
                     }}
-                    pageSizeOptions={[10, 25,50]}
+                    pageSizeOptions={[10, 25, 50]}
                 />
             </Box>
 
             <Dialog open={deleteConfirmation.open} onClose={cancelDelete}>
                 <DialogTitle>Confirmation de suppression</DialogTitle>
                 <DialogContent>
-                    Êtes-vous sûr de vouloir supprimer cet utilisateur ?
+                    Êtes-vous sûr de vouloir supprimer ce projet ?
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={cancelDelete}>Annuler</Button>
@@ -143,4 +137,4 @@ const User = () => {
     );
 };
 
-export default User;
+export default Projet;

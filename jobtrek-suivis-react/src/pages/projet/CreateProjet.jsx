@@ -1,14 +1,14 @@
-import {Box, Button, MenuItem, Select, TextField} from "@mui/material";
-import {Formik} from "formik";
-import * as yup from "yup";
-import Header from "../../components/Header";
-import {Link, useNavigate, useParams} from "react-router-dom";
-import CustomButton from "../../components/button";
-import React, {useEffect, useState} from "react";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import React, { useEffect, useState } from 'react';
+import { Box, Button, MenuItem, Select, TextField } from '@mui/material';
+import { Formik } from 'formik';
+import * as yup from 'yup';
+import Header from '../../components/Header';
+import { Link, useNavigate } from 'react-router-dom';
+import CustomButton from '../../components/button';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const CreateProjet = () => {
-    const isNonMobile = useMediaQuery("(min-width:600px)");
+    const isNonMobile = useMediaQuery('(min-width:600px)');
     const navigate = useNavigate();
     const [metiers, setMetiers] = useState([]);
 
@@ -30,24 +30,24 @@ const CreateProjet = () => {
         fetchMetiers();
     }, []);
 
-    const handleFormSubmit = async (values, {setErrors}) => {
+    const handleFormSubmit = async (values, { setErrors }) => {
         try {
-            const response = await fetch(process.env.REACT_APP_API_URL_PROJET, {
-                method: "POST",
+            const response = await fetch('http://localhost:5080/api/Projet', {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(values),
             });
 
             if (response.ok) {
-                navigate("/projet");
+                navigate('/projet');
             } else {
                 console.error("Une erreur s'est produite lors de la création du projet.");
             }
         } catch (error) {
             console.error("Une erreur s'est produite lors de la création du projet:", error);
-            setErrors({backend: error.message});
+            setErrors({ backend: error.message });
         }
     };
 
@@ -58,8 +58,8 @@ const CreateProjet = () => {
             .max(30, "Le nom du projet ne peut pas dépasser 30 caractères."),
         desc_projet: yup
             .string()
-            .required("la description du projet est obligatoire.")
-            .max(100, "la description du projet ne peut pas dépasser 100 caractères."),
+            .required("La description du projet est obligatoire.")
+            .max(100, "La description du projet ne peut pas dépasser 100 caractères."),
         time_estimed: yup
             .string()
             .required("Le temps estimé est obligatoire.")
@@ -74,12 +74,12 @@ const CreateProjet = () => {
         metierId: null,
         metier: {
             nom_metier: "string",
-        },
+        }
     };
 
     return (
         <Box m="20px">
-            <Header title="CREATE PROJET" subtitle="Créer un nouveau projet"/>
+            <Header title="CREATE PROJET" subtitle="Créer un nouveau projet" />
 
             <Formik
                 onSubmit={handleFormSubmit}
@@ -101,7 +101,7 @@ const CreateProjet = () => {
                             gap="30px"
                             gridTemplateColumns="repeat(4, minmax(0, 1fr))"
                             sx={{
-                                "& > div": {gridColumn: isNonMobile ? undefined : "span 4"},
+                                "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
                             }}
                         >
                             <TextField
@@ -115,7 +115,7 @@ const CreateProjet = () => {
                                 name="nom_projet"
                                 error={!!touched.nom_projet && !!errors.nom_projet}
                                 helperText={touched.nom_projet && errors.nom_projet}
-                                sx={{gridColumn: "span 4"}}
+                                sx={{ gridColumn: "span 4" }}
                             />
                             <TextField
                                 fullWidth
@@ -128,7 +128,7 @@ const CreateProjet = () => {
                                 name="desc_projet"
                                 error={!!touched.desc_projet && !!errors.desc_projet}
                                 helperText={touched.desc_projet && errors.desc_projet}
-                                sx={{gridColumn: "span 4"}}
+                                sx={{ gridColumn: "span 4" }}
                             />
                             <TextField
                                 fullWidth
@@ -141,12 +141,12 @@ const CreateProjet = () => {
                                 name="time_estimed"
                                 error={!!touched.time_estimed && !!errors.time_estimed}
                                 helperText={touched.time_estimed && errors.time_estimed}
-                                sx={{gridColumn: "span 4"}}
+                                sx={{ gridColumn: "span 4" }}
                             />
                             <Select
                                 fullWidth
                                 variant="filled"
-                                label="Metier ID"
+                                label="Métier ID"
                                 onBlur={handleBlur}
                                 onChange={handleChange}
                                 value={values.metierId}
@@ -163,8 +163,8 @@ const CreateProjet = () => {
                             </Select>
                         </Box>
                         <Box display="flex" justifyContent="space-between" mt="20px">
-                            <Link to="/projet" style={{textDecoration: "none"}}>
-                                <CustomButton nom="Retour"/>
+                            <Link to="/projet" style={{ textDecoration: "none" }}>
+                                <CustomButton nom="Retour" />
                             </Link>
 
                             <Button
@@ -178,15 +178,14 @@ const CreateProjet = () => {
                                     color: "#FFFFFF",
                                 }}
                             >
-                                Crée nouveau Projet
+                                Créer nouveau Projet
                             </Button>
                         </Box>
                     </form>
                 )}
             </Formik>
         </Box>
-    )
-        ;
+    );
 };
 
 export default CreateProjet;
