@@ -20,7 +20,7 @@ public class ProjetService : IProjetService
     {
         var projet = await _context.Projets
             .Include(p => p.Metier)
-            .FirstOrDefaultAsync(p => p.IdProjet == id);
+            .FirstOrDefaultAsync(p => p.Id == id);
         
         if (projet is null)
             return null;
@@ -49,7 +49,7 @@ public class ProjetService : IProjetService
     {
         var projet = await _context.Projets
             .Include(p => p.Metier)
-            .FirstOrDefaultAsync(p => p.IdProjet == id);
+            .FirstOrDefaultAsync(p => p.Id == id);
         
         if (projet is null)
             return null;

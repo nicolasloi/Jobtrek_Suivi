@@ -6,7 +6,7 @@ namespace JobtrekSuivisAPI.Models;
 public class Projet
 {
     [Key]
-    public int IdProjet { get; set; }
+    public int Id { get; set; }
     
     public string nom_projet { get; set; }
     public string desc_projet { get; set; }
