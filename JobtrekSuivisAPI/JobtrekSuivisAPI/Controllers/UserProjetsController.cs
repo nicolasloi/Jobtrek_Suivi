@@ -64,5 +64,12 @@ namespace JobtrekSuivisAPI.Controllers
 
             return result;
         }
+        
+        [HttpGet("{userId}/projects")]
+        public async Task<IActionResult> GetProjetsByUserId(int userId)
+        {
+            var userProjets = await _userProjetService.GetProjetsByUserId(userId);
+            return Ok(userProjets);
+        }
     }
 }

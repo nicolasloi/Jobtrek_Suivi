@@ -105,5 +105,17 @@ namespace JobtrekSuivisAPI.Services.UserProjetService
             await _context.SaveChangesAsync();
             return await _context.UserProjets.ToListAsync();
         }
+        
+        public async Task<List<UserProjet>> GetProjetsByUserId(int userId)
+        {
+            var projets = await _context.UserProjets
+                .Include(up => up.User)
+                .Include(up => up.Projet)
+                .Where(up => up.UserId == userId)
+                .ToListAsync();
+
+            return projets;
+        }
+
     }
 }
