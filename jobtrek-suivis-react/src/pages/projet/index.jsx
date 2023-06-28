@@ -60,6 +60,12 @@ const Projet = () => {
         { field: 'desc_projet', headerName: 'Description Projet', flex: 1 },
         { field: 'time_estimed', headerName: 'Temps Estimé', flex: 1 },
         {
+            field: 'metier',
+            headerName: 'Métier',
+            flex: 1,
+            valueGetter: (params) => params.row.metier.nom_metier,
+        },
+        {
             field: 'actions',
             headerName: 'Actions',
             width: 100,
