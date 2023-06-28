@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import {Box, Typography, useTheme} from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { Navigate } from 'react-router-dom';
 import Header from '../../components/Header';
-import {tokens} from "../../theme";
+import moment from 'moment';
 
 const Dashboard = ({ user }) => {
     const [projets, setProjets] = useState([]);
@@ -35,12 +35,19 @@ const Dashboard = ({ user }) => {
             <Box mt="20px">
                 <Typography variant="h4">Vos projets :</Typography>
                 {projets.length > 0 ? (
-                    projets.map((projet) => (
-                        <Box key={projet.idUserProjet} mt="10px">
-                            <Typography variant="h6">{projet.projet?.nom_projet}</Typography>
-                            <Typography>{projet.projet?.desc_projet}</Typography>
-                        </Box>
-                    ))
+                    projets.map((projet) => {
+                        const dateDebut = moment(projet.dateCommencement);
+                        const dateFin = moment(projet.dateRendu);
+                        const dureeProjet = dateFin.diff(dateDebut, 'days');
+
+                        return (
+                            <Box key={projet.idUserProjet} mt="10px">
+                                <Typography variant="h6">{projet.projet?.nom_projet}</Typography>
+                                <Typography>{projet.projet?.desc_projet}</Typography>
+                                <Typography variant="h6">Durée du projet : {dureeProjet} jours</Typography>
+                            </Box>
+                        );
+                    })
                 ) : (
                     <Typography>Aucun projet trouvé.</Typography>
                 )}
