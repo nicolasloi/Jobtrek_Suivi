@@ -3,6 +3,7 @@ global using JobtrekSuivisAPI.Data;
 using System.Text.Json.Serialization;
 using JobtrekSuivisAPI.Services.CompetenceService;
 using JobtrekSuivisAPI.Services.DomaineService;
+using JobtrekSuivisAPI.Services.EvaluationService;
 using JobtrekSuivisAPI.Services.MetierService;
 using JobtrekSuivisAPI.Services.ProjetService;
 using JobtrekSuivisAPI.Services.RoleService;
@@ -30,6 +31,7 @@ builder.Services.AddScoped<IDomaineService, DomaineService>();
 builder.Services.AddScoped<ICompetenceService, CompetenceService>();
 builder.Services.AddScoped<IUserProjetService, UserProjetService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IEvaluationService, EvaluationService>();
 builder.Services.AddDbContext<DataContext>();
 
 var provider = builder.Services.BuildServiceProvider();

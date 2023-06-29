@@ -1,16 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import Header from "../../components/Header";
-import { Box, IconButton, useTheme, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import { tokens } from "../../theme";
-import CustomButton from "../../components/button";
-import { Link } from "react-router-dom";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { Link, useNavigate } from 'react-router-dom';
+import {
+    Box,
+    IconButton,
+    useTheme,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Button,
+} from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EvaluateIcon from '@mui/icons-material/Assessment';
+import Header from '../../components/Header';
+import CustomButton from '../../components/button';
+import { tokens } from '../../theme';
 
 const Projet = () => {
     const [projetData, setProjetData] = useState([]);
     const [deleteConfirmation, setDeleteConfirmation] = useState({ open: false, projetId: null });
+    const navigate = useNavigate();
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
 
@@ -21,7 +32,7 @@ const Projet = () => {
                 const data = await response.json();
                 setProjetData(data);
             } catch (error) {
-                console.log('Une erreur s\'est produite lors de la récupération des données:', error);
+                console.log("Une erreur s'est produite lors de la récupération des données:", error);
             }
         }
 
@@ -54,6 +65,10 @@ const Projet = () => {
         setDeleteConfirmation({ open: false, projetId: null });
     };
 
+    const redirectToEvaluation = (id) => {
+        navigate(`/projet/eval/${id}`);
+    };
+
     const columns = [
         { field: 'id', headerName: 'ID', width: 60 },
         { field: 'nom_projet', headerName: 'Nom Projet', flex: 1 },
@@ -81,6 +96,9 @@ const Projet = () => {
                     <IconButton size="small" onClick={() => handleDelete(params.row.id)}>
                         <DeleteIcon fontSize="small" />
                     </IconButton>
+                    <IconButton size="small" onClick={() => redirectToEvaluation(params.row.id)}>
+                        <EvaluateIcon fontSize="small" />
+                    </IconButton>
                 </Box>
             ),
         },
@@ -90,40 +108,40 @@ const Projet = () => {
         <Box m="20px">
             <Header title="PROJET" subtitle="Liste des Projets" />
             <Box display="flex" justifyContent="flex-end" alignItems="center" margin="30px">
-                <Link to="/projet/create" style={{ textDecoration: "none" }}>
+                <Link to="/projet/create" style={{ textDecoration: 'none' }}>
                     <CustomButton nom="CREATE PROJET" />
                 </Link>
             </Box>
-            <Box m="50 0 0 0" height="auto" sx={{
-                display: "flex",
-                flexDirection: "column",
-                "& .MuiDataGrid-root": {
-                    border: "none",
-                },
-                "& .MuiDataGrid-cell": {
-                    borderBottom: "none"
-                },
-                "& .name-column--cell": {
-                    color: colors.greenAccent[300]
-                },
-                "& .MuiDataGrid-columnHeaders": {
-                    backgroundColor: colors.tableAccent[500],
-                },
-                "& .MuiDataGrid-virtualScroller": {},
-                "& .MuiDataGrid-footerContainer": {
-                    borderTop: "none",
-                    backgroundColor: colors.tableAccent[500],
-                },
-            }}>
+            <Box
+                m="50 0 0 0"
+                height="auto"
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    '& .MuiDataGrid-root': {
+                        border: 'none',
+                    },
+                    '& .MuiDataGrid-cell': {
+                        borderBottom: 'none',
+                    },
+                    '& .name-column--cell': {
+                        color: colors.greenAccent[300],
+                    },
+                    '& .MuiDataGrid-columnHeaders': {
+                        backgroundColor: colors.tableAccent[500],
+                    },
+                    '& .MuiDataGrid-virtualScroller': {},
+                    '& .MuiDataGrid-footerContainer': {
+                        borderTop: 'none',
+                        backgroundColor: colors.tableAccent[500],
+                    },
+                }}
+            >
                 <DataGrid
                     rows={projetData}
                     columns={columns}
-                    initialState={{
-                        pagination: {
-                            paginationModel: { page: 0, pageSize: 10 },
-                        },
-                    }}
-                    pageSizeOptions={[10, 25, 50]}
+                    pageSize={10}
+                    rowsPerPageOptions={[10, 25, 50]}
                 />
             </Box>
 

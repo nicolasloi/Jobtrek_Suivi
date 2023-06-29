@@ -15,6 +15,7 @@ import MetierEdit from "./pages/metier/MetierEdit";
 import CreateProjet from "./pages/projet/CreateProjet";
 import Projet from "./pages/projet";
 import ProjetEdit from "./pages/projet/ProjetEdit";
+import ProjetEval from "./pages/projet/ProjetEval";
 
 
 function App() {
@@ -136,6 +137,15 @@ function App() {
                                 element={
                                     <ProtectedRoute>
                                         <ProjetEdit user={user}/>
+                                    </ProtectedRoute>
+                                }
+                            />
+
+                            <Route
+                                path="/projet/eval/:id"
+                                element={
+                                    <ProtectedRoute>
+                                        <ProjetEval user={user}/>
                                     </ProtectedRoute>
                                 }
                             />
