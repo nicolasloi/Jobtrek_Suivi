@@ -3,16 +3,15 @@ import { Box, Button, MenuItem, Select, TextField } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import Header from "../../components/Header";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import {Link, Navigate, useNavigate, useParams} from "react-router-dom";
 import CustomButton from "../../components/button";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-const ProjetEval = () => {
+const ProjetEval = ({ user }) => {
     const isNonMobile = useMediaQuery("(min-width:600px)");
     const params = useParams();
     const navigate = useNavigate();
     const [competences, setCompetences] = useState([]);
-    const [users, setUsers] = useState([]);
     const [userProjets, setUserProjets] = useState([]);
 
     useEffect(() => {
@@ -27,20 +26,6 @@ const ProjetEval = () => {
                 }
             } catch (error) {
                 console.error("Une erreur s'est produite lors de la récupération des compétences:", error);
-            }
-        };
-
-        const fetchUsers = async () => {
-            try {
-                const response = await fetch('http://localhost:5080/api/User');
-                if (response.ok) {
-                    const data = await response.json();
-                    setUsers(data);
-                } else {
-                    console.error("Une erreur s'est produite lors de la récupération des utilisateurs.");
-                }
-            } catch (error) {
-                console.error("Une erreur s'est produite lors de la récupération des utilisateurs:", error);
             }
         };
 
@@ -59,9 +44,12 @@ const ProjetEval = () => {
         };
 
         fetchCompetences();
-        fetchUsers();
         fetchUserProjets();
     }, []);
+
+    if (!user || !user.username) {
+        return <Navigate to="/login" replace />;
+    }
 
     const handleFormSubmit = async (values, { setErrors }) => {
         try {
@@ -103,7 +91,7 @@ const ProjetEval = () => {
         competence: {
             nom_competence: "string",
         },
-        userId: null,
+        userId: user.id,
         user: {
             username: "string",
         },
@@ -181,24 +169,6 @@ const ProjetEval = () => {
                                 {competences.map((competence) => (
                                     <MenuItem key={competence.id} value={competence.id}>
                                         {competence.nom_competence}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                            <Select
-                                fullWidth
-                                variant="filled"
-                                label="User ID"
-                                onBlur={handleBlur}
-                                onChange={handleChange}
-                                value={values.userId}
-                                name="userId"
-                                error={!!touched.userId && !!errors.userId}
-                                helperText={touched.userId && errors.userId}
-                                sx={{ gridColumn: "span 4" }}
-                            >
-                                {users.map((user) => (
-                                    <MenuItem key={user.id} value={user.id}>
-                                        {user.username}
                                     </MenuItem>
                                 ))}
                             </Select>
