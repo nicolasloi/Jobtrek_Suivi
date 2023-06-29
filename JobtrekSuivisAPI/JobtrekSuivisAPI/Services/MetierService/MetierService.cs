@@ -29,11 +29,40 @@ public class MetierService : IMetierService
         _context.Metiers.Add(metier);
         await _context.SaveChangesAsync();
 
-        return await _context.Metiers.ToListAsync();
+        foreach (var domaine in metier.Domaines)
+        {
+            domaine.MetierId = metier.Id;
+            _context.Domaines.Add(domaine);
+
+            foreach (var competence in domaine.Competences)
+            {
+                competence.DomaineId = domaine.IdDomaine;
+                _context.Competences.Add(competence);
+
+                foreach (var module in competence.ModuleCompetences)
+                {
+                    var moduleCompetence = new ModuleCompetence
+                    {
+                        CompetenceId = competence.IdCompetence,
+                        ModuleId = module.Module.IdModule
+                    };
+
+                    _context.ModuleCompetences.Add(moduleCompetence);
+                }
+            }
+        }
+
+        await _context.SaveChangesAsync();
+
+        var metiers = await _context.Metiers
+            .Include(m => m.Domaines)
+            .ThenInclude(d => d.Competences)
+            .ThenInclude(c => c.ModuleCompetences)
+            .ThenInclude(mc => mc.Module)
+            .ToListAsync();
+
+        return metiers;
     }
-
-
-
 
     public async Task<List<Metier>?> UpdateMetier(int id, Metier request)
     {

@@ -9,9 +9,9 @@ public class Competence
     public int IdCompetence { get; set; }
 
     public string nom_competence { get; set; }
-    public string desc_competence { get; set; }
+    public string? desc_competence { get; set; }
     public int DomaineId { get; set; }
-    public Domaine Domaine { get; set; } = null!;
+    public Domaine? Domaine { get; set; }
     
     public List<ModuleCompetence> ModuleCompetences { get; set; } = new List<ModuleCompetence>();
 }

@@ -14,9 +14,9 @@ public class Metier
     public string nom_metier { get; set; }
 
     [JsonIgnore]
-    public ICollection<User> Users { get; } = new List<User>();
+    public ICollection<User> Users { get; set; } = new List<User>();
     [JsonIgnore]
-    public ICollection<Projet> Projets { get; } = new List<Projet>();
+    public ICollection<Projet> Projets { get; set; } = new List<Projet>();
     [JsonIgnore]
-    public ICollection<Domaine> Domaines { get; } = new List<Domaine>();
+    public ICollection<Domaine> Domaines { get; set; } = new List<Domaine>();
 }
