@@ -1,85 +1,121 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Button, MenuItem, Select, TextField } from '@mui/material';
-import { Formik } from 'formik';
-import * as yup from 'yup';
-import Header from '../../components/Header';
-import { Link, useNavigate } from 'react-router-dom';
-import CustomButton from '../../components/button';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import React, { useEffect, useState } from "react";
+import { Box, Button, MenuItem, Select, TextField } from "@mui/material";
+import { Formik } from "formik";
+import * as yup from "yup";
+import Header from "../../components/Header";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import CustomButton from "../../components/button";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const ProjetEval = () => {
-    const isNonMobile = useMediaQuery('(min-width:600px)');
+    const isNonMobile = useMediaQuery("(min-width:600px)");
+    const params = useParams();
     const navigate = useNavigate();
-    const [metiers, setMetiers] = useState([]);
+    const [competences, setCompetences] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [userProjets, setUserProjets] = useState([]);
 
     useEffect(() => {
-        const fetchMetiers = async () => {
+        const fetchCompetences = async () => {
             try {
-                const response = await fetch(process.env.REACT_APP_API_URL_METIERS);
+                const response = await fetch('http://localhost:5080/api/Competence');
                 if (response.ok) {
                     const data = await response.json();
-                    setMetiers(data);
+                    setCompetences(data);
                 } else {
-                    console.error("Une erreur s'est produite lors de la récupération des métiers.");
+                    console.error("Une erreur s'est produite lors de la récupération des compétences.");
                 }
             } catch (error) {
-                console.error("Une erreur s'est produite lors de la récupération des métiers:", error);
+                console.error("Une erreur s'est produite lors de la récupération des compétences:", error);
             }
         };
 
-        fetchMetiers();
+        const fetchUsers = async () => {
+            try {
+                const response = await fetch('http://localhost:5080/api/User');
+                if (response.ok) {
+                    const data = await response.json();
+                    setUsers(data);
+                } else {
+                    console.error("Une erreur s'est produite lors de la récupération des utilisateurs.");
+                }
+            } catch (error) {
+                console.error("Une erreur s'est produite lors de la récupération des utilisateurs:", error);
+            }
+        };
+
+        const fetchUserProjets = async () => {
+            try {
+                const response = await fetch('http://localhost:5080/api/Projet');
+                if (response.ok) {
+                    const data = await response.json();
+                    setUserProjets(data);
+                } else {
+                    console.error("Une erreur s'est produite lors de la récupération des projets utilisateur.");
+                }
+            } catch (error) {
+                console.error("Une erreur s'est produite lors de la récupération des projets utilisateur:", error);
+            }
+        };
+
+        fetchCompetences();
+        fetchUsers();
+        fetchUserProjets();
     }, []);
 
     const handleFormSubmit = async (values, { setErrors }) => {
         try {
-            const response = await fetch('http://localhost:5080/api/Projet', {
-                method: 'POST',
+            const response = await fetch('http://localhost:5080/api/Evaluation', {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify(values),
             });
 
             if (response.ok) {
-                navigate('/projet');
+                navigate("/projet");
             } else {
-                console.error("Une erreur s'est produite lors de la création du projet.");
+                console.error("Une erreur s'est produite lors de la création de l'évaluation.");
             }
         } catch (error) {
-            console.error("Une erreur s'est produite lors de la création du projet:", error);
+            console.error("Une erreur s'est produite lors de la création de l'évaluation:", error);
             setErrors({ backend: error.message });
         }
     };
 
     const checkoutSchema = yup.object().shape({
-        nom_projet: yup
-            .string()
-            .required("Le nom du projet est obligatoire.")
-            .max(30, "Le nom du projet ne peut pas dépasser 30 caractères."),
-        desc_projet: yup
-            .string()
-            .required("La description du projet est obligatoire.")
-            .max(100, "La description du projet ne peut pas dépasser 100 caractères."),
-        time_estimed: yup
-            .string()
-            .required("Le temps estimé est obligatoire.")
-            .max(30, "Le temps estimé ne peut pas dépasser 30 caractères."),
-        metierId: yup.number().required("L'ID du métier est obligatoire."),
+        commentaire_eval: yup.string().required("Le commentaire est obligatoire."),
+        note_eval: yup
+            .number()
+            .required("La note est obligatoire.")
+            .min(1, "La note doit être supérieure ou égale à 1.")
+            .max(6, "La note doit être inférieure ou égale à 6."),
+        competenceId: yup.number().required("L'ID de la compétence est obligatoire."),
+        userId: yup.number().required("L'ID de l'utilisateur est obligatoire."),
+        userProjetId: yup.number().required("L'ID du projet utilisateur est obligatoire."),
     });
 
     const initialValues = {
-        nom_projet: "",
-        desc_projet: "",
-        time_estimed: "",
-        metierId: null,
-        metier: {
-            nom_metier: "string",
-        }
+        commentaire_eval: "",
+        note_eval: null,
+        competenceId: null,
+        competence: {
+            nom_competence: "string",
+        },
+        userId: null,
+        user: {
+            username: "string",
+        },
+        userProjetId: null,
+        userProjet: {
+            nom_projet: "string",
+        },
     };
 
     return (
         <Box m="20px">
-            <Header title="CREATE PROJET" subtitle="Créer un nouveau projet" />
+            <Header title="CREATE EVALUATION" subtitle="Créer une nouvelle évaluation de projet" />
 
             <Formik
                 onSubmit={handleFormSubmit}
@@ -108,56 +144,79 @@ const ProjetEval = () => {
                                 fullWidth
                                 variant="filled"
                                 type="text"
-                                label="Nom du projet"
+                                label="Commentaire"
                                 onBlur={handleBlur}
                                 onChange={handleChange}
-                                value={values.nom_projet}
-                                name="nom_projet"
-                                error={!!touched.nom_projet && !!errors.nom_projet}
-                                helperText={touched.nom_projet && errors.nom_projet}
+                                value={values.commentaire_eval}
+                                name="commentaire_eval"
+                                error={!!touched.commentaire_eval && !!errors.commentaire_eval}
+                                helperText={touched.commentaire_eval && errors.commentaire_eval}
                                 sx={{ gridColumn: "span 4" }}
                             />
                             <TextField
                                 fullWidth
                                 variant="filled"
-                                type="text"
-                                label="Description du projet"
+                                type="number"
+                                label="Note"
                                 onBlur={handleBlur}
                                 onChange={handleChange}
-                                value={values.desc_projet}
-                                name="desc_projet"
-                                error={!!touched.desc_projet && !!errors.desc_projet}
-                                helperText={touched.desc_projet && errors.desc_projet}
-                                sx={{ gridColumn: "span 4" }}
-                            />
-                            <TextField
-                                fullWidth
-                                variant="filled"
-                                type="text"
-                                label="Temps estimé pour faire le projet"
-                                onBlur={handleBlur}
-                                onChange={handleChange}
-                                value={values.time_estimed}
-                                name="time_estimed"
-                                error={!!touched.time_estimed && !!errors.time_estimed}
-                                helperText={touched.time_estimed && errors.time_estimed}
+                                value={values.note_eval}
+                                name="note_eval"
+                                error={!!touched.note_eval && !!errors.note_eval}
+                                helperText={touched.note_eval && errors.note_eval}
                                 sx={{ gridColumn: "span 4" }}
                             />
                             <Select
                                 fullWidth
                                 variant="filled"
-                                label="Métier ID"
+                                label="Compétence ID"
                                 onBlur={handleBlur}
                                 onChange={handleChange}
-                                value={values.metierId}
-                                name="metierId"
-                                error={!!touched.metierId && !!errors.metierId}
-                                helperText={touched.metierId && errors.metierId}
+                                value={values.competenceId}
+                                name="competenceId"
+                                error={!!touched.competenceId && !!errors.competenceId}
+                                helperText={touched.competenceId && errors.competenceId}
                                 sx={{ gridColumn: "span 4" }}
                             >
-                                {metiers.map((metier) => (
-                                    <MenuItem key={metier.id} value={metier.id}>
-                                        {metier.nom_metier}
+                                {competences.map((competence) => (
+                                    <MenuItem key={competence.id} value={competence.id}>
+                                        {competence.nom_competence}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                            <Select
+                                fullWidth
+                                variant="filled"
+                                label="User ID"
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                value={values.userId}
+                                name="userId"
+                                error={!!touched.userId && !!errors.userId}
+                                helperText={touched.userId && errors.userId}
+                                sx={{ gridColumn: "span 4" }}
+                            >
+                                {users.map((user) => (
+                                    <MenuItem key={user.id} value={user.id}>
+                                        {user.username}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                            <Select
+                                fullWidth
+                                variant="filled"
+                                label="User Projet ID"
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                value={values.userProjetId}
+                                name="userProjetId"
+                                error={!!touched.userProjetId && !!errors.userProjetId}
+                                helperText={touched.userProjetId && errors.userProjetId}
+                                sx={{ gridColumn: "span 4" }}
+                            >
+                                {userProjets.map((userProjet) => (
+                                    <MenuItem key={userProjet.id} value={userProjet.id}>
+                                        {userProjet.nom_projet}
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -178,7 +237,7 @@ const ProjetEval = () => {
                                     color: "#FFFFFF",
                                 }}
                             >
-                                Créer nouveau Projet
+                                Create New Projet Evaluation
                             </Button>
                         </Box>
                     </form>
