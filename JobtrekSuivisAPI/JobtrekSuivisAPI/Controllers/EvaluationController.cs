@@ -40,7 +40,7 @@ namespace JobtrekSuivisAPI.Controllers
         public async Task<ActionResult<Evaluation>> CreateEvaluation(Evaluation evaluation)
         {
             var createdEvaluation = await _evaluationService.CreateEvaluation(evaluation);
-            return CreatedAtAction(nameof(GetEvaluation), new { id = createdEvaluation.IdEvaluation }, createdEvaluation);
+            return Ok(createdEvaluation);
         }
 
         [HttpPut("{id}")]

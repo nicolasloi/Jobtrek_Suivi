@@ -84,21 +84,15 @@ const ProjetEval = ({ user }) => {
         userProjetId: yup.number().required("L'ID du projet utilisateur est obligatoire."),
     });
 
+    const userId = parseInt(user.id);
+    console.log(userId)
+
     const initialValues = {
         commentaire_eval: "",
         note_eval: null,
         competenceId: null,
-        competence: {
-            nom_competence: "string",
-        },
-        userId: user.id,
-        user: {
-            username: "string",
-        },
+        userId: userId,
         userProjetId: null,
-        userProjet: {
-            nom_projet: "string",
-        },
     };
 
     return (
@@ -167,7 +161,7 @@ const ProjetEval = ({ user }) => {
                                 sx={{ gridColumn: "span 4" }}
                             >
                                 {competences.map((competence) => (
-                                    <MenuItem key={competence.id} value={competence.id}>
+                                    <MenuItem key={competence.idCompetence} value={competence.idCompetence}>
                                         {competence.nom_competence}
                                     </MenuItem>
                                 ))}
